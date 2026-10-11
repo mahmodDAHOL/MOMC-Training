@@ -1,0 +1,206 @@
+{
+ "actions": [],
+ "creation": "2026-10-11 09:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "applicant",
+  "applicant_name",
+  "status",
+  "time_col",
+  "started_at",
+  "deadline",
+  "submitted_at",
+  "result_section",
+  "total_score",
+  "max_score",
+  "passed",
+  "recommended_track",
+  "result_col",
+  "score_aptitude",
+  "score_support",
+  "score_security",
+  "score_programming",
+  "data_section",
+  "question_order",
+  "answers",
+  "ip_address",
+  "user_agent"
+ ],
+ "fields": [
+  {
+   "fieldname": "applicant",
+   "fieldtype": "Link",
+   "label": "المتقدم",
+   "options": "Training Applicant",
+   "reqd": 1,
+   "in_list_view": 1,
+   "search_index": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "applicant_name",
+   "fieldtype": "Data",
+   "label": "الاسم",
+   "fetch_from": "applicant.applicant_name",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "الحالة",
+   "options": "In Progress\nSubmitted\nExpired",
+   "default": "In Progress",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "time_col",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "started_at",
+   "fieldtype": "Datetime",
+   "label": "وقت البدء",
+   "read_only": 1
+  },
+  {
+   "fieldname": "deadline",
+   "fieldtype": "Datetime",
+   "label": "الموعد النهائي",
+   "read_only": 1
+  },
+  {
+   "fieldname": "submitted_at",
+   "fieldtype": "Datetime",
+   "label": "وقت التسليم",
+   "read_only": 1
+  },
+  {
+   "fieldname": "result_section",
+   "fieldtype": "Section Break",
+   "label": "النتيجة"
+  },
+  {
+   "fieldname": "total_score",
+   "fieldtype": "Float",
+   "label": "المجموع",
+   "in_list_view": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "max_score",
+   "fieldtype": "Float",
+   "label": "العلامة العظمى",
+   "read_only": 1
+  },
+  {
+   "fieldname": "passed",
+   "fieldtype": "Check",
+   "label": "تجاوز الحد الأدنى",
+   "in_standard_filter": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "recommended_track",
+   "fieldtype": "Data",
+   "label": "المسار المقترح",
+   "read_only": 1
+  },
+  {
+   "fieldname": "result_col",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "score_aptitude",
+   "fieldtype": "Float",
+   "label": "القدرات الذهنية",
+   "read_only": 1
+  },
+  {
+   "fieldname": "score_support",
+   "fieldtype": "Float",
+   "label": "دعم المستخدمين",
+   "read_only": 1
+  },
+  {
+   "fieldname": "score_security",
+   "fieldtype": "Float",
+   "label": "الأمن السيبراني",
+   "read_only": 1
+  },
+  {
+   "fieldname": "score_programming",
+   "fieldtype": "Float",
+   "label": "البرمجة",
+   "read_only": 1
+  },
+  {
+   "fieldname": "data_section",
+   "fieldtype": "Section Break",
+   "label": "البيانات الخام",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "question_order",
+   "fieldtype": "JSON",
+   "label": "ترتيب الأسئلة",
+   "read_only": 1
+  },
+  {
+   "fieldname": "answers",
+   "fieldtype": "JSON",
+   "label": "الإجابات",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ip_address",
+   "fieldtype": "Data",
+   "label": "عنوان IP",
+   "read_only": 1
+  },
+  {
+   "fieldname": "user_agent",
+   "fieldtype": "Small Text",
+   "label": "المتصفح",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "links": [],
+ "modified": "2026-10-11 09:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "MOMC Training",
+ "name": "Training Exam Attempt",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "email": 1,
+   "share": 1,
+   "delete": 1
+  },
+  {
+   "role": "Training Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "email": 1,
+   "share": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "autoname": "format:EX-{YYYY}-{#####}",
+ "naming_rule": "Expression",
+ "title_field": "applicant_name",
+ "in_create": 1
+}

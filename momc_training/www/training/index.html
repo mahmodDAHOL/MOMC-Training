@@ -1,0 +1,42 @@
+{% extends "templates/training/base.html" %}
+{% block content %}
+<section class="hero">
+	<div>
+		<h1>ثلاثة أشهر من العمل الحقيقي في تقانة المعلومات</h1>
+		<p class="lead">برنامج تدريب عملي للخريجين الجدد في مديرية تقانة المعلومات والتحول الرقمي. تعمل مع فرق المديرية على أنظمة الوزارة بإشراف مرشد، وتتخرج بمشروع تعرضه أمام لجنة.</p>
+		<div class="actions">
+			{% if settings.registration_open %}
+			<a class="btn btn-primary" href="/training/register">إنشاء حساب والتقديم</a>
+			{% else %}
+			<p class="alert alert-info is-shown">التسجيل مغلق حالياً.</p>
+			{% endif %}
+			<a class="btn btn-ghost" href="/training/login">لدي حساب</a>
+		</div>
+	</div>
+	<div class="panel">
+		<h2>خطوات التقديم</h2>
+		<ol class="timeline">
+			<li><strong>أنشئ حساباً ببريدك الإلكتروني</strong><span class="muted small">ستصلك رسالة برمز تأكيد.</span></li>
+			<li><strong>صوّر هويتك</strong><span class="muted small">يقرأ النظام بياناتك منها، وتراجعها أنت قبل الحفظ.</span></li>
+			<li><strong>أكمل مؤهلك وارفع الشهادة والصورة</strong></li>
+			<li><strong>أدِّ امتحان القبول</strong><span class="muted small">{{ settings.exam_duration_minutes or 90 }} دقيقة: قدرات ذهنية وأساسيات المسارات الثلاثة.</span></li>
+		</ol>
+	</div>
+</section>
+
+<h2>المسارات</h2>
+<div class="tracks">
+	<div class="track">
+		<h3>دعم المستخدمين</h3>
+		<p class="muted">تجميع الأجهزة وتثبيت الأنظمة، الشبكات، Active Directory، ونظام التذاكر. تنهي البرنامج بمناوبة دعم كاملة.</p>
+	</div>
+	<div class="track">
+		<h3>الأمن السيبراني</h3>
+		<p class="muted">تقوية الأنظمة، الجدران النارية، المراقبة بـ Wazuh، تقييم الثغرات والاستجابة للحوادث داخل مختبر معزول.</p>
+	</div>
+	<div class="track">
+		<h3>البرمجة</h3>
+		<p class="muted">Python وقواعد البيانات والويب، ثم تطوير وحدات على ERPNext. تنهي البرنامج بتطبيق يخدم قسماً في الوزارة.</p>
+	</div>
+</div>
+{% endblock %}

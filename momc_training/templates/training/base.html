@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="robots" content="noindex">
+	<meta name="ta-csrf" content="{{ csrf | e }}">
+	<title>{% block title %}{{ program_title | e }}{% endblock %} — وزارة الإعلام</title>
+	<link rel="icon" href="{{ logo_uri }}">
+	<style>{{ portal_css | safe }}</style>
+</head>
+<body data-page="{{ page }}">
+	<a class="visually-hidden" href="#main">انتقل إلى المحتوى</a>
+	<header class="ta-header">
+		<div class="ta-header__inner">
+			<a class="ta-brand" href="/training">
+				<img src="{{ logo_uri }}" alt="">
+				<div>
+					<strong>{{ program_title | e }}</strong>
+					<span>وزارة الإعلام — مديرية تقانة المعلومات والتحول الرقمي</span>
+				</div>
+			</a>
+			<nav class="ta-nav" aria-label="القائمة">
+				{% if applicant %}
+					<a href="/training/profile" {% if page == "profile" %}aria-current="page"{% endif %}>ملفي</a>
+					<a href="/training/exam" {% if page == "exam" %}aria-current="page"{% endif %}>الامتحان</a>
+					<a href="/training/status" {% if page == "status" %}aria-current="page"{% endif %}>حالة الطلب</a>
+					<button type="button" data-action="logout">خروج</button>
+				{% else %}
+					<a href="/training/login" {% if page == "login" %}aria-current="page"{% endif %}>تسجيل الدخول</a>
+					<a href="/training/register" {% if page == "register" %}aria-current="page"{% endif %}>إنشاء حساب</a>
+				{% endif %}
+			</nav>
+		</div>
+	</header>
+	<main id="main" class="ta-main">
+		{% block content %}{% endblock %}
+	</main>
+	<footer class="ta-footer">
+		{% if settings.contact_email %}للاستفسار: <a href="mailto:{{ settings.contact_email | e }}" dir="ltr">{{ settings.contact_email | e }}</a>{% endif %}
+	</footer>
+	<script>{{ portal_js | safe }}</script>
+</body>
+</html>

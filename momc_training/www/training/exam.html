@@ -1,0 +1,51 @@
+{% extends "templates/training/base.html" %}
+{% block title %}امتحان القبول{% endblock %}
+{% block content %}
+<div data-exam data-in-progress="{{ 1 if in_progress else 0 }}">
+	<div class="ta-narrow" data-exam-intro {% if in_progress %}hidden{% endif %}>
+		<div class="panel">
+			<h1>امتحان القبول</h1>
+			<p class="lead">{{ counts.values() | sum }} سؤال اختيار من متعدد في {{ settings.exam_duration_minutes or 90 }} دقيقة.</p>
+			<div class="scores" style="margin:16px 0 20px">
+				<div><b>{{ counts.Aptitude }}</b>قدرات ذهنية</div>
+				<div><b>{{ counts.Support }}</b>دعم المستخدمين</div>
+				<div><b>{{ counts.Security }}</b>الأمن السيبراني</div>
+				<div><b>{{ counts.Programming }}</b>البرمجة</div>
+			</div>
+			<ul>
+				<li>يبدأ المؤقت عند الضغط على «ابدأ الامتحان» ولا يتوقف إن أغلقت الصفحة.</li>
+				<li>تُحفظ كل إجابة فور اختيارها، ويمكنك العودة لأي سؤال قبل التسليم.</li>
+				<li>عند انتهاء الوقت تُسلَّم إجاباتك المحفوظة تلقائياً.</li>
+				<li>لا علامات سالبة: أجب عن كل الأسئلة.</li>
+				<li>يُسمح بورقة مسودة، ولا يُسمح بالآلة الحاسبة.</li>
+			</ul>
+			<div class="alert alert-error" role="alert" data-error></div>
+			<button class="btn btn-primary" type="button" data-action="start-exam">ابدأ الامتحان</button>
+		</div>
+	</div>
+
+	<div data-exam-run hidden>
+		<div class="exam-bar">
+			<span class="timer" data-timer aria-live="off">--:--</span>
+			<div class="progress" aria-hidden="true"><span data-progress></span></div>
+			<span class="small muted" data-count></span>
+		</div>
+		<div class="ta-narrow">
+			<div class="alert alert-error" role="alert" data-error></div>
+			<div class="panel">
+				<div class="section-name" data-section></div>
+				<div class="question" data-question></div>
+				<div class="options" role="radiogroup" data-options></div>
+				<div class="actions" style="justify-content:space-between">
+					<div class="actions" style="margin:0">
+						<button class="btn btn-ghost" type="button" data-q-prev>السؤال السابق</button>
+						<button class="btn btn-primary" type="button" data-q-next>السؤال التالي</button>
+					</div>
+					<button class="btn btn-ghost" type="button" data-action="submit-exam">تسليم الامتحان</button>
+				</div>
+				<nav class="navigator" aria-label="الانتقال إلى سؤال" data-navigator></nav>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

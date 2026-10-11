@@ -1,0 +1,44 @@
+{% extends "templates/training/base.html" %}
+{% block title %}إنشاء حساب{% endblock %}
+{% block content %}
+<div class="ta-split">
+	<div class="panel">
+		<h1>إنشاء حساب</h1>
+		<p class="muted">حسابك هنا منفصل عن أنظمة الوزارة الداخلية، ويُستخدم لمتابعة طلبك فقط.</p>
+		{% if not settings.registration_open %}
+		<p class="alert alert-info is-shown">التسجيل مغلق حالياً.</p>
+		{% else %}
+		<form data-form="register" novalidate>
+			<div class="alert alert-error" role="alert" data-error></div>
+			<div class="field">
+				<label for="email">البريد الإلكتروني</label>
+				<input class="input" id="email" name="email" type="email" dir="ltr" autocomplete="email" required>
+			</div>
+			<div class="field">
+				<label for="password">كلمة المرور</label>
+				<input class="input" id="password" name="password" type="password" dir="ltr" autocomplete="new-password" minlength="10" required>
+				<div class="hint">10 محارف على الأقل، فيها أحرف وأرقام.</div>
+			</div>
+			<div class="field">
+				<label class="check">
+					<input type="checkbox" name="consent" value="1" required>
+					<span>أوافق على أن تستخدم الوزارة بياناتي وصورة هويتي لدراسة طلبي في البرنامج فقط.</span>
+				</label>
+			</div>
+			<button class="btn btn-primary btn-block" type="submit">إنشاء الحساب وإرسال رمز التأكيد</button>
+		</form>
+		{% endif %}
+		<p class="small muted" style="margin-top:16px">لديك حساب؟ <a href="/training/login">سجّل الدخول</a></p>
+	</div>
+	<div>
+		<h2>ما الذي ستحتاجه</h2>
+		<ul>
+			<li>هويتك الشخصية (الوجهان).</li>
+			<li>صورة شخصية حديثة بخلفية فاتحة.</li>
+			<li>الشهادة الجامعية أو وثيقة التخرج (صورة أو PDF).</li>
+			<li>نحو 15 دقيقة لإكمال الملف، ثم {{ settings.exam_duration_minutes or 90 }} دقيقة للامتحان.</li>
+		</ul>
+		{% if settings.privacy_text %}<div class="panel small">{{ settings.privacy_text }}</div>{% endif %}
+	</div>
+</div>
+{% endblock %}

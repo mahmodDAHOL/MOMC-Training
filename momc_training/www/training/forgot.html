@@ -1,0 +1,18 @@
+{% extends "templates/training/base.html" %}
+{% block title %}استعادة كلمة المرور{% endblock %}
+{% block content %}
+<div class="ta-narrow" style="max-width:460px">
+	<div class="panel">
+		<h1>استعادة كلمة المرور</h1>
+		<p class="muted">أدخل بريدك وسنرسل إليه رمزاً لتعيين كلمة مرور جديدة.</p>
+		<form data-form="forgot" novalidate>
+			<div class="alert alert-error" role="alert" data-error></div>
+			<div class="field">
+				<label for="email">البريد الإلكتروني</label>
+				<input class="input" id="email" name="email" type="email" dir="ltr" autocomplete="email" required>
+			</div>
+			<button class="btn btn-primary btn-block" type="submit">إرسال الرمز</button>
+		</form>
+	</div>
+</div>
+{% endblock %}

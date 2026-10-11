@@ -1,0 +1,21 @@
+{% extends "templates/training/base.html" %}
+{% block title %}تأكيد البريد{% endblock %}
+{% block content %}
+<div class="ta-narrow" style="max-width:460px">
+	<div class="panel">
+		<h1>تأكيد البريد الإلكتروني</h1>
+		<p class="muted">أرسلنا رمزاً من 6 أرقام إلى <b dir="ltr">{{ email | e }}</b>. افحص مجلد الرسائل غير المرغوبة إن لم تجده.</p>
+		<form data-form="verify" novalidate>
+			<div class="alert alert-error" role="alert" data-error></div>
+			<div class="alert alert-info" role="status" data-info></div>
+			<input type="hidden" name="email" value="{{ email | e }}">
+			<div class="field">
+				<label for="code">رمز التأكيد</label>
+				<input class="input otp" id="code" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" required>
+			</div>
+			<button class="btn btn-primary btn-block" type="submit">تأكيد ومتابعة</button>
+		</form>
+		<button class="btn btn-ghost btn-block" style="margin-top:12px" type="button" data-action="resend" data-purpose="verify" data-email="{{ email | e }}">إرسال رمز جديد</button>
+	</div>
+</div>
+{% endblock %}

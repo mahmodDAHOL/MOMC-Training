@@ -1,0 +1,50 @@
+[
+ {
+  "name": "Training Applicants Accepted",
+  "label": "المقبولون",
+  "document_type": "Training Applicant",
+  "function": "Count",
+  "filters_json": "[[\"Training Applicant\", \"status\", \"=\", \"Accepted\", false]]",
+  "color": "#054239",
+  "type": "Document Type",
+  "is_public": 1,
+  "show_percentage_stats": 1,
+  "stats_time_interval": "Weekly"
+ },
+ {
+  "name": "Training Applicants Examined",
+  "label": "أنهوا الامتحان",
+  "document_type": "Training Applicant",
+  "function": "Count",
+  "filters_json": "[[\"Training Applicant\", \"status\", \"=\", \"Exam Completed\", false]]",
+  "color": "#126E70",
+  "type": "Document Type",
+  "is_public": 1,
+  "show_percentage_stats": 1,
+  "stats_time_interval": "Weekly"
+ },
+ {
+  "name": "Training Applicants Submitted",
+  "label": "أرسلوا الطلب",
+  "document_type": "Training Applicant",
+  "function": "Count",
+  "filters_json": "[[\"Training Applicant\", \"status\", \"=\", \"Submitted\", false]]",
+  "color": "#988561",
+  "type": "Document Type",
+  "is_public": 1,
+  "show_percentage_stats": 1,
+  "stats_time_interval": "Weekly"
+ },
+ {
+  "name": "Training Applicants Total",
+  "label": "المتقدمون",
+  "document_type": "Training Applicant",
+  "function": "Count",
+  "filters_json": "[]",
+  "color": "#2f6b4f",
+  "type": "Document Type",
+  "is_public": 1,
+  "show_percentage_stats": 1,
+  "stats_time_interval": "Weekly"
+ }
+]

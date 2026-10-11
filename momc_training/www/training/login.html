@@ -1,0 +1,25 @@
+{% extends "templates/training/base.html" %}
+{% block title %}تسجيل الدخول{% endblock %}
+{% block content %}
+<div class="ta-narrow" style="max-width:460px">
+	<div class="panel">
+		<h1>تسجيل الدخول</h1>
+		<form data-form="login" novalidate>
+			<div class="alert alert-error" role="alert" data-error></div>
+			<div class="field">
+				<label for="email">البريد الإلكتروني</label>
+				<input class="input" id="email" name="email" type="email" dir="ltr" autocomplete="email" required>
+			</div>
+			<div class="field">
+				<label for="password">كلمة المرور</label>
+				<input class="input" id="password" name="password" type="password" dir="ltr" autocomplete="current-password" required>
+			</div>
+			<button class="btn btn-primary btn-block" type="submit">دخول</button>
+		</form>
+		<div class="actions small" style="justify-content:space-between;margin-top:16px">
+			<a href="/training/forgot">نسيت كلمة المرور</a>
+			<a href="/training/register">إنشاء حساب جديد</a>
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+[project]
+name = "momc_training"
+authors = [{ name = "مديرية تقانة المعلومات والتحول الرقمي - وزارة الإعلام" }]
+description = "بوابة برنامج تدريب الخريجين الجدد: تسجيل مستقل، ملف شخصي مع قراءة الهوية آلياً، امتحان قبول، ومتابعة داخل ERPNext"
+requires-python = ">=3.10"
+readme = "README.md"
+dynamic = ["version"]
+dependencies = [
+    # passlib and Pillow already ship with Frappe v15.
+    "pytesseract~=0.3.13",
+    "opencv-python-headless>=4.10,<6",
+    "numpy>=1.26",
+]
+
+[build-system]
+requires = ["flit_core >=3.4,<4"]
+build-backend = "flit_core.buildapi"
+
+[tool.bench.frappe-dependencies]
+frappe = ">=15.0.0,<16.0.0"
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"

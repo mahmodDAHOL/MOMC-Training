@@ -1,0 +1,145 @@
+{% extends "templates/training/base.html" %}
+{% block title %}ملفي{% endblock %}
+{% macro text(name, label, hint="", type="text", dir="", attrs="") -%}
+<div class="field">
+	<label for="f-{{ name }}">{{ label }}</label>
+	<input class="input" id="f-{{ name }}" name="{{ name }}" type="{{ type }}" {% if dir %}dir="{{ dir }}"{% endif %} value="{{ v[name] | e }}" {{ attrs }}>
+	<div class="ocr-note">قرأه النظام من الهوية — تأكد منه.</div>
+	{% if hint %}<div class="hint">{{ hint }}</div>{% endif %}
+</div>
+{%- endmacro %}
+{% block content %}
+<h1>ملف التقديم</h1>
+<p class="muted">يُحفظ عملك عند الانتقال بين الخطوات. يمكنك الخروج والعودة لاحقاً.</p>
+
+<div class="wizard" data-wizard>
+	<ol class="steps" aria-label="خطوات الملف">
+		<li><button type="button" data-step="1" aria-current="step"><span class="dot">1</span>الهوية</button></li>
+		<li><button type="button" data-step="2"><span class="dot">2</span>البيانات الشخصية</button></li>
+		<li><button type="button" data-step="3"><span class="dot">3</span>المؤهل والمسار</button></li>
+		<li><button type="button" data-step="4"><span class="dot">4</span>الصورة والشهادة</button></li>
+		<li><button type="button" data-step="5"><span class="dot">5</span>المراجعة والإرسال</button></li>
+	</ol>
+
+	<form class="panel" data-form="profile" novalidate>
+		<div class="alert alert-error" role="alert" data-error></div>
+		<div class="alert alert-info" role="status" data-info></div>
+
+		<section class="step-pane is-active" data-pane="1">
+			<h2>صوّر هويتك</h2>
+			<p class="muted">صوّر كل وجه على سطح داكن وبإضاءة جيدة، بحيث تملأ البطاقة الإطار. سيقرأ النظام بياناتك ويملأ الخطوة التالية.</p>
+			<div class="cards-pair">
+				<label class="dropzone {% if files.id_front %}has-file{% endif %}" data-upload="id_front">
+					<input type="file" accept="image/*" capture="environment" aria-label="الوجه الأمامي للهوية">
+					{% if files.id_front %}<img class="preview" src="/api/method/momc_training.api.files.view?kind=id_front" alt="">{% endif %}
+					<span class="dz-label"><strong>الوجه الأمامي</strong><span>الوجه الذي يحمل الصورة</span></span>
+					<span class="dz-state">{% if files.id_front %}تم الرفع — اضغط للاستبدال{% endif %}</span>
+				</label>
+				<label class="dropzone {% if files.id_back %}has-file{% endif %}" data-upload="id_back">
+					<input type="file" accept="image/*" capture="environment" aria-label="الوجه الخلفي للهوية">
+					{% if files.id_back %}<img class="preview" src="/api/method/momc_training.api.files.view?kind=id_back" alt="">{% endif %}
+					<span class="dz-label"><strong>الوجه الخلفي</strong><span>الأمانة والقيد والعنوان</span></span>
+					<span class="dz-state">{% if files.id_back %}تم الرفع — اضغط للاستبدال{% endif %}</span>
+				</label>
+			</div>
+			<div class="actions"><button class="btn btn-primary" type="button" data-next>التالي: مراجعة البيانات</button></div>
+		</section>
+
+		<section class="step-pane" data-pane="2">
+			<h2>البيانات الشخصية</h2>
+			<p class="muted">الحقول المظللة قرأها النظام من الهوية. صحّح أي حرف خاطئ قبل المتابعة.</p>
+			<div class="grid-2">
+				{{ text("first_name", "الاسم") }}
+				{{ text("father_name", "اسم الأب") }}
+				{{ text("last_name", "النسبة") }}
+				{{ text("mother_name", "اسم ونسبة الأم") }}
+				{{ text("national_id", "الرقم الوطني", "11 رقماً كما في الهوية", dir="ltr", attrs='inputmode="numeric" maxlength="11"') }}
+				<div class="field">
+					<label for="f-gender">الجنس</label>
+					<select class="input" id="f-gender" name="gender">
+						<option value=""></option>
+						<option value="Male" {% if v.gender == "Male" %}selected{% endif %}>ذكر</option>
+						<option value="Female" {% if v.gender == "Female" %}selected{% endif %}>أنثى</option>
+					</select>
+					<div class="ocr-note">قرأه النظام من الهوية — تأكد منه.</div>
+				</div>
+				{{ text("birth_place", "مكان الولادة") }}
+				{{ text("birth_date", "تاريخ الولادة", type="date", dir="ltr") }}
+				{{ text("governorate", "الأمانة") }}
+				{{ text("registry", "القيد") }}
+				{{ text("phone", "رقم الهاتف", "مثال: 0944123456", type="tel", dir="ltr", attrs='autocomplete="tel"') }}
+			</div>
+			<div class="field">
+				<label for="f-address">العنوان الحالي</label>
+				<textarea class="input" id="f-address" name="address" rows="2">{{ v.address | e }}</textarea>
+			</div>
+			<div class="actions">
+				<button class="btn btn-primary" type="button" data-next>حفظ ومتابعة</button>
+				<button class="btn btn-ghost" type="button" data-prev>السابق</button>
+			</div>
+		</section>
+
+		<section class="step-pane" data-pane="3">
+			<h2>المؤهل العلمي والمسار</h2>
+			<div class="grid-2">
+				{{ text("university", "الجامعة") }}
+				{{ text("faculty", "الكلية") }}
+				{{ text("major", "الاختصاص") }}
+				{{ text("graduation_year", "سنة التخرج", type="number", dir="ltr", attrs='min="1980" max="' ~ (current_year + 1) ~ '"') }}
+				{{ text("gpa", "المعدل", "من 100", type="number", dir="ltr", attrs='step="0.01" min="0" max="100"') }}
+			</div>
+			<fieldset class="field" style="border:0;padding:0;margin:0 0 18px">
+				<legend style="font-weight:600;margin-bottom:8px">المسار الذي ترغب به</legend>
+				<div class="options">
+					{% for value, label in track_ar.items() %}
+					<label class="option"><input type="radio" name="track_preference" value="{{ value }}" {% if v.track_preference == value %}checked{% endif %}> {{ label }}</label>
+					{% endfor %}
+				</div>
+				<div class="hint">نحاول قبولك في مسارك المرغوب إن كانت علامتك في قسمه من الامتحان كافية.</div>
+			</fieldset>
+			<div class="actions">
+				<button class="btn btn-primary" type="button" data-next>حفظ ومتابعة</button>
+				<button class="btn btn-ghost" type="button" data-prev>السابق</button>
+			</div>
+		</section>
+
+		<section class="step-pane" data-pane="4">
+			<h2>الصورة الشخصية والشهادة</h2>
+			<div class="attachments">
+				<div>
+					<h3>صورة شخصية</h3>
+					<label class="dropzone is-portrait {% if files.photo %}has-file{% endif %}" data-upload="photo">
+						<input type="file" accept="image/*" aria-label="الصورة الشخصية">
+						{% if files.photo %}<img class="preview" src="/api/method/momc_training.api.files.view?kind=photo" alt="">{% endif %}
+						<span class="dz-label"><strong>صورة حديثة</strong><span>خلفية فاتحة، الوجه واضح</span></span>
+						<span class="dz-state">{% if files.photo %}تم الرفع — اضغط للاستبدال{% endif %}</span>
+					</label>
+				</div>
+				<div>
+					<h3>الشهادة الجامعية</h3>
+					<label class="dropzone is-doc {% if files.certificate %}has-file{% endif %}" data-upload="certificate">
+						<input type="file" accept="image/*,application/pdf" aria-label="الشهادة الجامعية">
+						<span class="dz-label"><strong>صورة أو PDF</strong><span>الشهادة أو وثيقة التخرج</span></span>
+						<span class="dz-state">{% if files.certificate %}تم الرفع — اضغط للاستبدال{% endif %}</span>
+					</label>
+				</div>
+			</div>
+			<p class="hint">الحد الأقصى لكل ملف {{ settings.max_upload_mb or 5 }} ميغابايت.</p>
+			<div class="actions">
+				<button class="btn btn-primary" type="button" data-next>التالي: المراجعة</button>
+				<button class="btn btn-ghost" type="button" data-prev>السابق</button>
+			</div>
+		</section>
+
+		<section class="step-pane review" data-pane="5">
+			<h2>راجع طلبك</h2>
+			<p class="muted">بعد الإرسال لن تتمكن من تعديل البيانات، وتنتقل مباشرة إلى امتحان القبول.</p>
+			<dl data-review></dl>
+			<div class="actions">
+				<button class="btn btn-primary" type="button" data-action="submit-profile">إرسال الطلب</button>
+				<button class="btn btn-ghost" type="button" data-prev>السابق</button>
+			</div>
+		</section>
+	</form>
+</div>
+{% endblock %}

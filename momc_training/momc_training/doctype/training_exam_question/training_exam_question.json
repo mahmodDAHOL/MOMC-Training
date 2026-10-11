@@ -1,0 +1,143 @@
+{
+ "actions": [],
+ "creation": "2026-10-11 09:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section",
+  "enabled",
+  "points",
+  "question",
+  "options_section",
+  "option_a",
+  "option_b",
+  "options_col",
+  "option_c",
+  "option_d",
+  "answer_section",
+  "correct_option",
+  "explanation"
+ ],
+ "fields": [
+  {
+   "fieldname": "section",
+   "fieldtype": "Select",
+   "label": "القسم",
+   "options": "Aptitude\nSupport\nSecurity\nProgramming",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "مفعّل",
+   "default": "1",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "points",
+   "fieldtype": "Float",
+   "label": "العلامة",
+   "default": "2",
+   "reqd": 1
+  },
+  {
+   "fieldname": "question",
+   "fieldtype": "Small Text",
+   "label": "السؤال",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "options_section",
+   "fieldtype": "Section Break",
+   "label": "الخيارات"
+  },
+  {
+   "fieldname": "option_a",
+   "fieldtype": "Data",
+   "label": "الخيار أ",
+   "reqd": 1
+  },
+  {
+   "fieldname": "option_b",
+   "fieldtype": "Data",
+   "label": "الخيار ب",
+   "reqd": 1
+  },
+  {
+   "fieldname": "options_col",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "option_c",
+   "fieldtype": "Data",
+   "label": "الخيار ج",
+   "reqd": 1
+  },
+  {
+   "fieldname": "option_d",
+   "fieldtype": "Data",
+   "label": "الخيار د",
+   "reqd": 1
+  },
+  {
+   "fieldname": "answer_section",
+   "fieldtype": "Section Break",
+   "label": "الإجابة"
+  },
+  {
+   "fieldname": "correct_option",
+   "fieldtype": "Select",
+   "label": "الإجابة الصحيحة",
+   "options": "A\nB\nC\nD",
+   "reqd": 1
+  },
+  {
+   "fieldname": "explanation",
+   "fieldtype": "Small Text",
+   "label": "التعليل (للمصحّح فقط)"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "links": [],
+ "modified": "2026-10-11 09:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "MOMC Training",
+ "name": "Training Exam Question",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "email": 1,
+   "share": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "import": 1
+  },
+  {
+   "role": "Training Manager",
+   "read": 1,
+   "report": 1,
+   "export": 1,
+   "print": 1,
+   "email": 1,
+   "share": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1
+  }
+ ],
+ "sort_field": "name",
+ "sort_order": "ASC",
+ "states": [],
+ "autoname": "format:Q-{#####}",
+ "naming_rule": "Expression",
+ "title_field": "question"
+}

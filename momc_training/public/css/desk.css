@@ -1,0 +1,56 @@
+/* Ministry identity on the graduate-training screens inside ERPNext.
+   Scoped to body.momc-brand (set by desk.js) so other modules are untouched. */
+body.momc-brand {
+	--momc-deep: #054239;
+	--momc-green: #126E70;
+	--momc-gold: #988561;
+	--momc-tint: #e6f0ef;
+	--primary: var(--momc-green);
+	--primary-color: var(--momc-green);
+	--btn-primary: var(--momc-green);
+	--text-on-primary: #fff;
+}
+body.momc-brand .page-head {
+	border-bottom: 3px solid var(--momc-gold);
+}
+body.momc-brand .page-head .title-text,
+body.momc-brand .page-head .page-title .title-text {
+	color: var(--momc-deep);
+	font-weight: 700;
+}
+body.momc-brand .btn-primary,
+body.momc-brand .btn-primary:focus {
+	background-color: var(--momc-green);
+	border-color: var(--momc-green);
+	color: #fff;
+}
+body.momc-brand .btn-primary:hover,
+body.momc-brand .btn-primary:active {
+	background-color: var(--momc-deep);
+	border-color: var(--momc-deep);
+}
+body.momc-brand .form-section .section-head,
+body.momc-brand .widget .widget-title,
+body.momc-brand .ce-header {
+	color: var(--momc-deep);
+}
+body.momc-brand .form-tabs .nav-link.active {
+	color: var(--momc-deep);
+	border-bottom-color: var(--momc-gold);
+}
+body.momc-brand .number-widget-box {
+	box-shadow: inset 0 3px 0 var(--momc-green);
+}
+body.momc-brand .number-widget-box .widget-body .number {
+	color: var(--momc-deep);
+}
+body.momc-brand .standard-sidebar-item.selected,
+body.momc-brand .sidebar-item-container .selected {
+	background-color: var(--momc-tint);
+	color: var(--momc-deep);
+}
+body.momc-brand a.indicator-pill.green,
+body.momc-brand .indicator-pill.green {
+	background-color: var(--momc-tint);
+	color: var(--momc-deep);
+}

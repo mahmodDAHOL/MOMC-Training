@@ -1,0 +1,27 @@
+{% extends "templates/training/base.html" %}
+{% block title %}تعيين كلمة مرور جديدة{% endblock %}
+{% block content %}
+<div class="ta-narrow" style="max-width:460px">
+	<div class="panel">
+		<h1>تعيين كلمة مرور جديدة</h1>
+		<form data-form="reset" novalidate>
+			<div class="alert alert-error" role="alert" data-error></div>
+			<div class="alert alert-info" role="status" data-info></div>
+			<div class="field">
+				<label for="email">البريد الإلكتروني</label>
+				<input class="input" id="email" name="email" type="email" dir="ltr" value="{{ email | e }}" required>
+			</div>
+			<div class="field">
+				<label for="code">الرمز الذي وصلك</label>
+				<input class="input otp" id="code" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" required>
+			</div>
+			<div class="field">
+				<label for="password">كلمة المرور الجديدة</label>
+				<input class="input" id="password" name="password" type="password" dir="ltr" autocomplete="new-password" minlength="10" required>
+				<div class="hint">10 محارف على الأقل، فيها أحرف وأرقام. سيُسجَّل خروجك من الأجهزة الأخرى.</div>
+			</div>
+			<button class="btn btn-primary btn-block" type="submit">حفظ كلمة المرور</button>
+		</form>
+	</div>
+</div>
+{% endblock %}

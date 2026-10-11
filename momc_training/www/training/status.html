@@ -1,0 +1,45 @@
+{% extends "templates/training/base.html" %}
+{% block title %}حالة الطلب{% endblock %}
+{% block content %}
+<div class="ta-narrow">
+	<h1>حالة طلبك</h1>
+	<p class="muted">رقم الطلب <b dir="ltr">{{ doc.name }}</b></p>
+	<ol class="status-track">
+		<li class="is-done">إنشاء الحساب والملف</li>
+		<li class="{{ 'is-current' if stage == 0 else 'is-done' }}">إرسال الطلب</li>
+		<li class="{{ 'is-current' if stage == 1 else ('is-done' if stage > 1 else '') }}">امتحان القبول</li>
+		<li class="{{ 'is-current' if stage == 2 else '' }}">القرار</li>
+	</ol>
+
+	<div class="panel">
+		{% if doc.status == "Submitted" %}
+			<h2>طلبك مكتمل — الخطوة التالية هي الامتحان</h2>
+			<p>خصّص {{ settings.exam_duration_minutes or 90 }} دقيقة متواصلة بلا مقاطعة قبل البدء.</p>
+			<a class="btn btn-primary" href="/training/exam">الانتقال إلى الامتحان</a>
+		{% elif doc.status == "Exam Completed" %}
+			<h2>استلمنا إجاباتك</h2>
+			<p>تدرس اللجنة الطلبات ونتائج الامتحان، وسيصلك القرار على بريدك <b dir="ltr">{{ doc.email | e }}</b>.</p>
+		{% elif doc.status == "Accepted" %}
+			<h2>تم قبولك في مسار {{ track_ar.get(doc.assigned_track, doc.assigned_track) }}</h2>
+			{% if doc.decision_notes %}<p>{{ doc.decision_notes | e }}</p>{% endif %}
+			<p>سنتواصل معك بموعد البدء ومكانه.</p>
+		{% elif doc.status == "Rejected" %}
+			<h2>لم يُقبل طلبك في هذه الدورة</h2>
+			{% if doc.decision_notes %}<p>{{ doc.decision_notes | e }}</p>{% endif %}
+			<p>نشكرك على اهتمامك، ونرحب بتقديمك في الدورات القادمة.</p>
+		{% else %}
+			<h2>{{ status_ar.get(doc.status, doc.status) }}</h2>
+		{% endif %}
+
+		{% if attempt %}
+		<h3 style="margin-top:20px">نتيجتك: {{ attempt.total_score | int }} من {{ attempt.max_score | int }}</h3>
+		<div class="scores">
+			<div><b>{{ attempt.score_aptitude | int }}</b>قدرات ذهنية</div>
+			<div><b>{{ attempt.score_support | int }}</b>دعم المستخدمين</div>
+			<div><b>{{ attempt.score_security | int }}</b>الأمن السيبراني</div>
+			<div><b>{{ attempt.score_programming | int }}</b>البرمجة</div>
+		</div>
+		{% endif %}
+	</div>
+</div>
+{% endblock %}

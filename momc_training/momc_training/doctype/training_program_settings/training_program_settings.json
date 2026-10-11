@@ -1,0 +1,152 @@
+{
+ "actions": [],
+ "creation": "2026-10-11 09:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "general_section",
+  "program_title",
+  "registration_open",
+  "exam_open",
+  "general_col",
+  "contact_email",
+  "max_upload_mb",
+  "exam_section",
+  "exam_duration_minutes",
+  "shuffle_questions",
+  "show_score_to_applicant",
+  "exam_col",
+  "pass_total",
+  "pass_aptitude",
+  "track_min",
+  "privacy_section",
+  "privacy_text"
+ ],
+ "fields": [
+  {
+   "fieldname": "general_section",
+   "fieldtype": "Section Break",
+   "label": "عام"
+  },
+  {
+   "fieldname": "program_title",
+   "fieldtype": "Data",
+   "label": "اسم البرنامج",
+   "default": "برنامج تدريب الخريجين الجدد"
+  },
+  {
+   "fieldname": "registration_open",
+   "fieldtype": "Check",
+   "label": "التسجيل مفتوح",
+   "default": "1"
+  },
+  {
+   "fieldname": "exam_open",
+   "fieldtype": "Check",
+   "label": "الامتحان متاح",
+   "default": "1"
+  },
+  {
+   "fieldname": "general_col",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "contact_email",
+   "fieldtype": "Data",
+   "label": "بريد التواصل",
+   "options": "Email"
+  },
+  {
+   "fieldname": "max_upload_mb",
+   "fieldtype": "Int",
+   "label": "الحجم الأقصى للملف (MB)",
+   "default": "5"
+  },
+  {
+   "fieldname": "exam_section",
+   "fieldtype": "Section Break",
+   "label": "الامتحان"
+  },
+  {
+   "fieldname": "exam_duration_minutes",
+   "fieldtype": "Int",
+   "label": "مدة الامتحان (دقيقة)",
+   "default": "90"
+  },
+  {
+   "fieldname": "shuffle_questions",
+   "fieldtype": "Check",
+   "label": "خلط ترتيب الأسئلة داخل كل قسم",
+   "default": "1"
+  },
+  {
+   "fieldname": "show_score_to_applicant",
+   "fieldtype": "Check",
+   "label": "إظهار العلامة للمتقدم بعد التسليم",
+   "default": "0"
+  },
+  {
+   "fieldname": "exam_col",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "pass_total",
+   "fieldtype": "Float",
+   "label": "الحد الأدنى للمجموع",
+   "default": "50"
+  },
+  {
+   "fieldname": "pass_aptitude",
+   "fieldtype": "Float",
+   "label": "الحد الأدنى للقدرات الذهنية",
+   "default": "20"
+  },
+  {
+   "fieldname": "track_min",
+   "fieldtype": "Float",
+   "label": "الحد الأدنى لقسم المسار المرغوب",
+   "default": "10"
+  },
+  {
+   "fieldname": "privacy_section",
+   "fieldtype": "Section Break",
+   "label": "الخصوصية"
+  },
+  {
+   "fieldname": "privacy_text",
+   "fieldtype": "Text Editor",
+   "label": "نص سياسة استخدام البيانات"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "links": [],
+ "modified": "2026-10-11 09:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "MOMC Training",
+ "name": "Training Program Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "print": 1,
+   "email": 1,
+   "share": 1
+  },
+  {
+   "role": "Training Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "print": 1,
+   "email": 1,
+   "share": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "issingle": 1
+}
