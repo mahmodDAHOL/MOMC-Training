@@ -7,8 +7,7 @@ readme = "README.md"
 dynamic = ["version"]
 dependencies = [
     # passlib and Pillow already ship with Frappe v15.
-    "pytesseract~=0.3.13",
-    "opencv-python-headless>=4.10,<6",
+
     "numpy>=1.26",
 ]
 
