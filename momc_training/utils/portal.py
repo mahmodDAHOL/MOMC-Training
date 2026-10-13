@@ -8,9 +8,9 @@ from functools import lru_cache
 
 import frappe
 
+from momc_training.utils.domains import get_track_ar
 from momc_training.utils import session
 
-TRACK_AR = {"IT End User Support": "دعم المستخدمين", "Cybersecurity": "الأمن السيبراني", "Programming": "البرمجة"}
 STATUS_AR = {
     "Draft": "قيد الإعداد", "Submitted": "أُرسل الطلب", "Exam Completed": "أُنجز الامتحان",
     "Accepted": "مقبول", "Rejected": "لم يُقبل", "Withdrawn": "منسحب",
@@ -59,7 +59,8 @@ def build(context, page: str, signed_in: bool | None = None):
     settings = frappe.get_cached_doc("Training Program Settings")
     context.program_title = settings.program_title or "برنامج تدريب الخريجين الجدد"
     context.settings = settings
-    context.track_ar = TRACK_AR
+    context.track_ar = get_track_ar()
+    context.domain_labels = context.track_ar
     context.status_ar = STATUS_AR
     data = session.current()
     context.csrf = data["csrf"] if data else ""
@@ -67,7 +68,16 @@ def build(context, page: str, signed_in: bool | None = None):
     if data:
         context.applicant = frappe.db.get_value(
             "Training Applicant", data["applicant"],
-            ["name", "email", "status", "first_name", "applicant_name", "exam_attempt"], as_dict=True,
+            [
+                "name",
+                "email",
+                "status",
+                "first_name",
+                "applicant_name",
+                "exam_attempt",
+                "track_preference",
+            ],
+            as_dict=True,
         )
         if not context.applicant:  # account removed from the desk
             session.destroy()

@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import frappe
 from frappe import _
-from frappe.rate_limiter import rate_limit
+# from frappe.rate_limiter import rate_limit
 from frappe.utils import now_datetime
 
 from momc_training.utils import mail, otp, passwords, security, session
@@ -44,7 +44,7 @@ def _settings():
 
 
 @frappe.whitelist(allow_guest=True, methods=["POST"])
-@rate_limit(limit=10, seconds=3600)
+# @rate_limit(limit=10, seconds=3600)
 def register(email: str, password: str, consent: int | str = 0):
     if not _settings().registration_open:
         frappe.throw(_("التسجيل مغلق حالياً"))
@@ -79,7 +79,7 @@ def register(email: str, password: str, consent: int | str = 0):
 
 
 @frappe.whitelist(allow_guest=True, methods=["POST"])
-@rate_limit(limit=20, seconds=3600)
+# @rate_limit(limit=20, seconds=3600)
 def verify(email: str, code: str):
     email = _email(email)
     applicant = _applicant_by_email(email)
@@ -94,7 +94,7 @@ def verify(email: str, code: str):
 
 
 @frappe.whitelist(allow_guest=True, methods=["POST"])
-@rate_limit(limit=5, seconds=900)
+# @rate_limit(limit=5, seconds=900)
 def resend(email: str, purpose: str = "verify"):
     email = _email(email)
     if purpose not in otp.PURPOSES:
@@ -106,7 +106,7 @@ def resend(email: str, purpose: str = "verify"):
 
 
 @frappe.whitelist(allow_guest=True, methods=["POST"])
-@rate_limit(limit=30, seconds=900)
+# @rate_limit(limit=30, seconds=900)
 def login(email: str, password: str):
     email = _email(email)
     fails_key = _FAILS.format(security.digest(frappe.utils.password.get_encryption_key(), "fails", email))
@@ -135,7 +135,7 @@ def logout():
 
 
 @frappe.whitelist(allow_guest=True, methods=["POST"])
-@rate_limit(limit=5, seconds=900)
+# @rate_limit(limit=5, seconds=900)
 def forgot(email: str):
     email = _email(email)
     if _applicant_by_email(email):
@@ -144,7 +144,7 @@ def forgot(email: str):
 
 
 @frappe.whitelist(allow_guest=True, methods=["POST"])
-@rate_limit(limit=20, seconds=3600)
+# @rate_limit(limit=20, seconds=3600)
 def reset(email: str, code: str, password: str):
     email = _email(email)
     problem = security.password_problem(password, email)

@@ -5,13 +5,7 @@
 	<div class="ta-narrow" data-exam-intro {% if in_progress %}hidden{% endif %}>
 		<div class="panel">
 			<h1>امتحان القبول</h1>
-			<p class="lead">{{ counts.values() | sum }} سؤال اختيار من متعدد في {{ settings.exam_duration_minutes or 90 }} دقيقة.</p>
-			<div class="scores" style="margin:16px 0 20px">
-				<div><b>{{ counts.Aptitude }}</b>قدرات ذهنية</div>
-				<div><b>{{ counts.Support }}</b>دعم المستخدمين</div>
-				<div><b>{{ counts.Security }}</b>الأمن السيبراني</div>
-				<div><b>{{ counts.Programming }}</b>البرمجة</div>
-			</div>
+			<p class="lead">{{ question_count }} سؤالاً في مجال {{ exam_domain }}، خلال {{ settings.exam_duration_minutes or 90 }} دقيقة.</p>
 			<ul>
 				<li>يبدأ المؤقت عند الضغط على «ابدأ الامتحان» ولا يتوقف إن أغلقت الصفحة.</li>
 				<li>تُحفظ كل إجابة فور اختيارها، ويمكنك العودة لأي سؤال قبل التسليم.</li>

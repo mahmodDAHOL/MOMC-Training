@@ -16,7 +16,8 @@ import frappe
 from frappe import _
 from frappe.utils import add_to_date, get_datetime, now_datetime
 
-from momc_training.exam.scoring import SECTIONS, Rules, score
+from momc_training.exam.scoring import Rules, score
+from momc_training.utils.domains import get_track_ar
 
 LETTERS = "ABCD"
 GRACE_SECONDS = 30  # network latency allowance at the deadline
@@ -43,7 +44,10 @@ def start(applicant: str, ip: str = "", user_agent: str = ""):
     settings = _settings()
     if not settings.exam_open:
         frappe.throw(_("الامتحان غير متاح حالياً"))
-    status = frappe.db.get_value("Training Applicant", applicant, "status")
+    applicant_doc = frappe.db.get_value(
+        "Training Applicant", applicant, ["status", "track_preference"], as_dict=True
+    )
+    status = applicant_doc.status if applicant_doc else None
     existing = active_attempt(applicant)
     if existing:
         if existing.status == "In Progress":
@@ -51,22 +55,27 @@ def start(applicant: str, ip: str = "", user_agent: str = ""):
         frappe.throw(_("لقد أدّيت الامتحان مسبقاً"))
     if status != "Submitted":
         frappe.throw(_("أرسل طلبك المكتمل أولاً، ثم ابدأ الامتحان"))
+    domain = applicant_doc.track_preference
+    if not domain:
+        frappe.throw(_("اختر مجال الامتحان قبل البدء"))
 
     rng = random.SystemRandom()
     order = []
-    for section in SECTIONS:
-        names = frappe.get_all(
-            "Training Exam Question", filters={"enabled": 1, "section": section}, pluck="name", order_by="name asc"
-        )
+    names = frappe.get_all(
+        "Training Exam Question",
+        filters={"enabled": 1, "section": domain},
+        pluck="name",
+        order_by="name asc",
+    )
+    if settings.shuffle_questions:
+        rng.shuffle(names)
+    for name in names:
+        perm = list(range(4))
         if settings.shuffle_questions:
-            rng.shuffle(names)
-        for name in names:
-            perm = list(range(4))
-            if settings.shuffle_questions:
-                rng.shuffle(perm)
-            order.append({"q": name, "perm": perm})
+            rng.shuffle(perm)
+        order.append({"q": name, "perm": perm})
     if not order:
-        frappe.throw(_("لا توجد أسئلة مفعّلة في بنك الأسئلة"))
+        frappe.throw(_("لا توجد أسئلة مفعّلة لمجال الامتحان الذي اخترته"))
 
     started = now_datetime()
     attempt = frappe.get_doc(
@@ -100,6 +109,7 @@ def payload(attempt) -> dict:
         )
     }
     questions = []
+    domain_labels = get_track_ar()
     for item in order:
         row = rows.get(item["q"])
         if not row:
@@ -111,6 +121,7 @@ def payload(attempt) -> dict:
             {
                 "id": row.name,
                 "section": row.section,
+                "section_label": domain_labels.get(row.section, row.section),
                 "text": row.question,
                 "options": [original[i] for i in item["perm"]],
                 "picked": shown_pick,
@@ -145,6 +156,8 @@ def save_answer(applicant: str, question: str, shown_index: int | None):
 
 def submit(applicant: str):
     attempt = active_attempt(applicant)
+    if attempt and attempt.status in ("Submitted", "Expired"):
+        return attempt
     if not attempt or attempt.status != "In Progress":
         frappe.throw(_("لا يوجد امتحان جارٍ"))
     late = now_datetime() > get_datetime(attempt.deadline) + timedelta(seconds=GRACE_SECONDS)
@@ -167,9 +180,22 @@ def finalize(attempt, status: str):
         filters={"name": ("in", [i["q"] for i in order])},
         fields=["name", "section", "correct_option as correct", "points"],
     )
+    selected_max = sum(float(question.points or 0) for question in bank)
+    enabled_questions = frappe.get_all(
+        "Training Exam Question", filters={"enabled": 1}, fields=["points"]
+    )
+    full_exam_max = sum(float(question.points or 0) for question in enabled_questions)
+    configured_pass_total = settings.pass_total or 50
+    # Preserve the configured pass percentage for this domain-only question set.
+    pass_total = (
+        configured_pass_total * selected_max / full_exam_max if full_exam_max else configured_pass_total
+    )
     preference = frappe.db.get_value("Training Applicant", attempt.applicant, "track_preference") or ""
-    rules = Rules(settings.pass_total or 50, settings.pass_aptitude or 20, settings.track_min or 10)
-    result = score([dict(r) for r in bank], answers, preference, rules)
+    rules = Rules(pass_total=pass_total, domain_min=settings.track_min or 10)
+    domains = frappe.get_all("Training Exam Domain", pluck="name", order_by="name asc")
+    result = score([dict(r) for r in bank], answers, preference, rules, domains)
+    valid_recommendation = result.recommended_domain if result.recommended_domain in domains else None
+    recommended_domain = valid_recommendation or (preference if preference in domains else next(iter(domains), None))
 
     attempt.update(
         {
@@ -178,11 +204,7 @@ def finalize(attempt, status: str):
             "total_score": result.total,
             "max_score": result.max_total,
             "passed": int(result.passed),
-            "recommended_track": result.recommended_track,
-            "score_aptitude": result.by_section["Aptitude"],
-            "score_support": result.by_section["Support"],
-            "score_security": result.by_section["Security"],
-            "score_programming": result.by_section["Programming"],
+            "recommended_track": recommended_domain,
         }
     )
     attempt.save(ignore_permissions=True)
@@ -194,7 +216,7 @@ def finalize(attempt, status: str):
             "exam_attempt": attempt.name,
             "exam_total": result.total,
             "exam_passed": int(result.passed),
-            "recommended_track": result.recommended_track,
+            "recommended_track": recommended_domain,
         },
     )
     return attempt

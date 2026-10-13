@@ -17,10 +17,6 @@
   "passed",
   "recommended_track",
   "result_col",
-  "score_aptitude",
-  "score_support",
-  "score_security",
-  "score_programming",
   "data_section",
   "question_order",
   "answers",
@@ -105,37 +101,14 @@
   },
   {
    "fieldname": "recommended_track",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "label": "المسار المقترح",
+   "options": "Training Exam Domain",
    "read_only": 1
   },
   {
    "fieldname": "result_col",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "score_aptitude",
-   "fieldtype": "Float",
-   "label": "القدرات الذهنية",
-   "read_only": 1
-  },
-  {
-   "fieldname": "score_support",
-   "fieldtype": "Float",
-   "label": "دعم المستخدمين",
-   "read_only": 1
-  },
-  {
-   "fieldname": "score_security",
-   "fieldtype": "Float",
-   "label": "الأمن السيبراني",
-   "read_only": 1
-  },
-  {
-   "fieldname": "score_programming",
-   "fieldtype": "Float",
-   "label": "البرمجة",
-   "read_only": 1
   },
   {
    "fieldname": "data_section",

@@ -52,7 +52,7 @@ def upload(kind: str):
 
     doc = _editable(applicant)
     _replace_file(doc, kind, content, ext)
-
+    
     result = {"kind": kind, "uploaded": True}
     if kind in OCR_SIDE:
         result["ocr"] = _run_ocr(doc, kind, content)

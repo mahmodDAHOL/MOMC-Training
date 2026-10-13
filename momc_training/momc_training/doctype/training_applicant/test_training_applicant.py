@@ -16,6 +16,17 @@ def make_applicant(email, **values):
     return doc
 
 
+def get_exam_domain():
+    questions = frappe.get_all(
+        "Training Exam Question",
+        filters={"enabled": 1},
+        pluck="section",
+        order_by="section asc",
+    )
+    domains = set(frappe.get_all("Training Exam Domain", pluck="name"))
+    return next(domain for domain in questions if domain in domains)
+
+
 class TestTrainingApplicant(FrappeTestCase):
     def tearDown(self):
         frappe.db.rollback()
@@ -31,10 +42,17 @@ class TestTrainingApplicant(FrappeTestCase):
             make_applicant("nid3@test.sy", national_id="123")
 
     def test_exam_expires_and_scores_saved_answers(self):
-        doc = make_applicant("exam@test.sy", track_preference="Programming")
+        domain = get_exam_domain()
+        doc = make_applicant("exam@test.sy", track_preference=domain)
         doc.db_set("status", "Submitted")
         attempt = service.start(doc.name)
         order = json.loads(attempt.question_order)
+        sections = frappe.get_all(
+            "Training Exam Question",
+            filters={"name": ("in", [item["q"] for item in order])},
+            pluck="section",
+        )
+        self.assertEqual(set(sections), {domain})
         first = order[0]
         correct = frappe.db.get_value("Training Exam Question", first["q"], "correct_option")
         shown = first["perm"].index("ABCD".index(correct))
@@ -51,8 +69,47 @@ class TestTrainingApplicant(FrappeTestCase):
         with self.assertRaises(frappe.ValidationError):
             service.start(doc.name)
 
+    def test_domain_only_exam_passes_at_half_of_available_points(self):
+        doc = make_applicant("domain-exam@test.sy", track_preference=get_exam_domain())
+        doc.db_set("status", "Submitted")
+        attempt = service.start(doc.name)
+        order = json.loads(attempt.question_order)
+        points = {
+            row.name: row.points
+            for row in frappe.get_all(
+                "Training Exam Question",
+                filters={"name": ("in", [item["q"] for item in order])},
+                fields=["name", "points"],
+            )
+        }
+        domain_max = sum(float(value or 0) for value in points.values())
+        full_exam_max = sum(
+            float(row.points or 0)
+            for row in frappe.get_all("Training Exam Question", filters={"enabled": 1}, fields=["points"])
+        )
+        pass_score = (
+            (frappe.get_cached_doc("Training Program Settings").pass_total or 50)
+            * domain_max
+            / full_exam_max
+        )
+        achieved = 0
+        for item in order:
+            correct = frappe.db.get_value("Training Exam Question", item["q"], "correct_option")
+            shown = item["perm"].index("ABCD".index(correct))
+            service.save_answer(doc.name, item["q"], shown)
+            achieved += float(points[item["q"]] or 0)
+            if achieved >= pass_score:
+                break
+
+        service.submit(doc.name)
+        attempt.reload()
+        self.assertEqual(attempt.max_score, domain_max)
+        self.assertEqual(attempt.total_score, achieved)
+        self.assertEqual(attempt.passed, 1)
+        self.assertEqual(service.submit(doc.name).status, "Submitted")
+
     def test_answers_after_deadline_are_refused(self):
-        doc = make_applicant("late@test.sy")
+        doc = make_applicant("late@test.sy", track_preference=get_exam_domain())
         doc.db_set("status", "Submitted")
         attempt = service.start(doc.name)
         attempt.db_set("deadline", add_to_date(now_datetime(), minutes=-2))
@@ -63,11 +120,12 @@ class TestTrainingApplicant(FrappeTestCase):
 
     def test_decide_accept_sets_track_and_status(self):
         frappe.flags.mute_emails = True
-        doc = make_applicant("decide@test.sy", track_preference="Cybersecurity", first_name="ريم")
+        domain = get_exam_domain()
+        doc = make_applicant("decide@test.sy", track_preference=domain, first_name="ريم")
         doc.db_set("status", "Exam Completed")
-        decide(doc.name, "Accepted", "Programming", "أهلاً بك")
+        decide(doc.name, "Accepted", domain, "أهلاً بك")
         doc.reload()
-        self.assertEqual((doc.status, doc.assigned_track), ("Accepted", "Programming"))
+        self.assertEqual((doc.status, doc.assigned_track), ("Accepted", domain))
         self.assertEqual(doc.decided_by, frappe.session.user)
         with self.assertRaises(frappe.ValidationError):
             decide(doc.name, "Maybe")

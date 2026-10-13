@@ -1,30 +1,24 @@
-"""Exam scoring and track recommendation (pure; no Frappe imports).
+"""Exam scoring and domain recommendation (pure; no Frappe imports).
 
 Rules (from the programme document):
-- pass = total >= pass_total AND aptitude >= pass_aptitude
-- track = the applicant's preference if their score in that track's section
-  is >= track_min; otherwise the track whose section they scored highest in
-  (ties go to the preference, then to the order below).
+- pass = total >= pass_total and, when configured, the required section meets
+  its threshold.
+- domain = the applicant's preference if it meets the threshold; otherwise the
+  highest-scoring domain, preferring the applicant's choice on ties.
 """
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass, field
-
-SECTIONS = ("Aptitude", "Support", "Security", "Programming")
-TRACK_SECTION = {
-    "IT End User Support": "Support",
-    "Cybersecurity": "Security",
-    "Programming": "Programming",
-}
-TRACKS = tuple(TRACK_SECTION)
 
 
 @dataclass(frozen=True)
 class Rules:
     pass_total: float = 50
-    pass_aptitude: float = 20
-    track_min: float = 10
+    pass_section_min: float = 20
+    domain_min: float = 10
+    pass_section: str | None = None
 
 
 DEFAULT_RULES = Rules()
@@ -37,18 +31,23 @@ class Result:
     total: float = 0
     max_total: float = 0
     passed: bool = False
-    recommended_track: str = ""
+    recommended_domain: str = ""
     correct: int = 0
     answered: int = 0
 
 
-def score(questions: list[dict], answers: dict[str, str], preference: str = "", rules: Rules = DEFAULT_RULES) -> Result:
+def score(
+    questions: list[dict],
+    answers: dict[str, str],
+    preference: str = "",
+    rules: Rules = DEFAULT_RULES,
+    domains: Sequence[str] = (),
+) -> Result:
     """questions: [{name, section, correct, points}], answers: {name: "A".."D"}."""
-    res = Result(by_section={s: 0.0 for s in SECTIONS}, max_by_section={s: 0.0 for s in SECTIONS})
+    sections = dict.fromkeys([*domains, *(q["section"] for q in questions)], 0.0)
+    res = Result(by_section=sections.copy(), max_by_section=sections.copy())
     for q in questions:
         section = q["section"]
-        if section not in res.by_section:
-            continue
         points = float(q.get("points") or 0)
         res.max_by_section[section] += points
         given = (answers.get(q["name"]) or "").strip().upper()
@@ -59,13 +58,25 @@ def score(questions: list[dict], answers: dict[str, str], preference: str = "", 
             res.correct += 1
     res.total = sum(res.by_section.values())
     res.max_total = sum(res.max_by_section.values())
-    res.passed = res.total >= rules.pass_total and res.by_section["Aptitude"] >= rules.pass_aptitude
-    res.recommended_track = recommend_track(res.by_section, preference, rules)
+    required_score = res.by_section.get(rules.pass_section, 0) if rules.pass_section else 0
+    meets_required_section = not rules.pass_section or required_score >= rules.pass_section_min
+    res.passed = res.total >= rules.pass_total and meets_required_section
+    res.recommended_domain = recommend_domain(res.by_section, preference, domains, rules)
     return res
 
 
-def recommend_track(by_section: dict[str, float], preference: str, rules: Rules = DEFAULT_RULES) -> str:
-    if preference in TRACK_SECTION and by_section.get(TRACK_SECTION[preference], 0) >= rules.track_min:
+def recommend_domain(
+    by_section: dict[str, float],
+    preference: str,
+    domains: Sequence[str] = (),
+    rules: Rules = DEFAULT_RULES,
+) -> str:
+    order = list(dict.fromkeys(domains)) if domains else list(by_section)
+    if preference in order and by_section.get(preference, 0) >= rules.domain_min:
         return preference
-    order = ([preference] if preference in TRACK_SECTION else []) + [t for t in TRACKS if t != preference]
-    return max(order, key=lambda t: (by_section.get(TRACK_SECTION[t], 0), -order.index(t)))
+    if not order:
+        return ""
+    if preference in order:
+        order.remove(preference)
+        order.insert(0, preference)
+    return max(order, key=lambda domain: by_section.get(domain, 0))

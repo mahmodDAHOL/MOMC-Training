@@ -5,10 +5,11 @@ from __future__ import annotations
 import frappe
 from frappe.utils import escape_html, get_url
 
+from momc_training.utils.domains import get_track_ar
+
 TEAL = "#126E70"
 DEEP = "#054239"
 SAND = "#988561"
-TRACK_AR = {"IT End User Support": "دعم المستخدمين", "Cybersecurity": "الأمن السيبراني", "Programming": "البرمجة"}
 
 
 def _layout(title: str, body_html: str) -> str:
@@ -37,14 +38,14 @@ def send_otp(email: str, code: str, purpose: str) -> None:
     body = f"""<p>رمز {what}:</p>
 <p style="font-size:30px;letter-spacing:8px;font-weight:bold;color:{TEAL};direction:ltr;text-align:center">{code}</p>
 <p>الرمز صالح لمدة 15 دقيقة. إن لم تطلب هذا الرمز فتجاهل هذه الرسالة.</p>"""
-    _send(email, f"رمز {what}: {code}", _layout(what, body), now=True)
+    _send(email, f"رمز {what}: {code}", _layout(what, body))
 
 
 def send_existing_account_notice(email: str) -> None:
     link = get_url("/training/login")
     body = f"""<p>حاول أحدهم إنشاء حساب جديد بهذا البريد، لكن لديك حساباً مسجلاً بالفعل.</p>
 <p>يمكنك <a href="{link}">تسجيل الدخول من هنا</a>، أو استعادة كلمة المرور إن نسيتها.</p>"""
-    _send(email, "لديك حساب مسجل بالفعل", _layout("لديك حساب مسجل", body), now=True)
+    _send(email, "لديك حساب مسجل بالفعل", _layout("لديك حساب مسجل", body))
 
 
 def send_submitted(doc) -> None:
@@ -58,7 +59,7 @@ def send_submitted(doc) -> None:
 def send_decision(doc) -> None:
     notes = f"<p>{escape_html(doc.decision_notes)}</p>" if doc.decision_notes else ""
     if doc.status == "Accepted":
-        track = TRACK_AR.get(doc.assigned_track, doc.assigned_track or "")
+        track = get_track_ar().get(doc.assigned_track, doc.assigned_track or "")
         body = f"""<p>مرحباً {escape_html(doc.first_name or '')}،</p>
 <p>يسرّنا إبلاغك بقبولك في البرنامج التدريبي ضمن مسار <b>{escape_html(track)}</b>.</p>{notes}
 <p>سنتواصل معك قريباً بموعد البدء.</p>"""

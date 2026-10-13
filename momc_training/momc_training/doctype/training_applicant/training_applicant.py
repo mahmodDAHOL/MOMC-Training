@@ -3,7 +3,6 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import cint, flt, getdate, now_datetime, nowdate
 
-from momc_training.exam.scoring import TRACKS
 from momc_training.ocr.text import clean, to_latin_digits, valid_national_id
 
 DECISIONS = ("Accepted", "Rejected")
@@ -51,7 +50,7 @@ def decide(name: str, decision: str, track: str | None = None, notes: str | None
         frappe.throw(_("لا يمكن اتخاذ قرار قبل إرسال الطلب"))
     if decision == "Accepted":
         track = track or doc.recommended_track or doc.track_preference
-        if track not in TRACKS:
+        if not track or not frappe.db.exists("Training Exam Domain", track):
             frappe.throw(_("اختر المسار المعتمد"))
         doc.assigned_track = track
     doc.status = decision

@@ -276,7 +276,6 @@
 	if (exam) initExam(exam);
 
 	function initExam(root) {
-		const SECTION_AR = { Aptitude: "القدرات الذهنية", Support: "دعم المستخدمين", Security: "الأمن السيبراني", Programming: "البرمجة" };
 		const intro = $("[data-exam-intro]", root);
 		const run = $("[data-exam-run]", root);
 		const runError = $("[data-error]", run);
@@ -290,7 +289,7 @@
 
 		function render() {
 			const q = questions[index];
-			$("[data-section]", run).textContent = `${SECTION_AR[q.section] || q.section} — السؤال ${index + 1} من ${questions.length}`;
+			$("[data-section]", run).textContent = `${q.section_label || q.section} — السؤال ${index + 1} من ${questions.length}`;
 			$("[data-question]", run).textContent = q.text;
 			const box = $("[data-options]", run);
 			box.replaceChildren(
@@ -383,8 +382,9 @@
 			try {
 				const r = await api("exam.submit");
 				location.href = r.next;
-			} catch {
-				location.href = "/training/status";
+			} catch (e) {
+				submitting = false;
+				show(runError, "تعذّر تسليم الامتحان. إجاباتك محفوظة، حاول التسليم مجدداً. " + e.message);
 			}
 		}
 

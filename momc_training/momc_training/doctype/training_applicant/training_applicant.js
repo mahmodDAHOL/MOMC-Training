@@ -1,9 +1,3 @@
-const TRACK_LABELS = {
-	"IT End User Support": "دعم المستخدمين",
-	Cybersecurity: "الأمن السيبراني",
-	Programming: "البرمجة",
-};
-
 frappe.ui.form.on("Training Applicant", {
 	refresh(frm) {
 		if (frm.is_new()) return;
@@ -33,10 +27,10 @@ function decide(frm, decision) {
 	if (decision === "Accepted") {
 		fields.push({
 			fieldname: "track",
-			fieldtype: "Select",
+			fieldtype: "Link",
 			label: __("المسار المعتمد"),
 			reqd: 1,
-			options: Object.keys(TRACK_LABELS).map((value) => ({ value, label: TRACK_LABELS[value] })),
+			options: "Training Exam Domain",
 			default: frm.doc.recommended_track || frm.doc.track_preference,
 		});
 	}

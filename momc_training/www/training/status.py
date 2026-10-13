@@ -13,7 +13,7 @@ def get_context(context):
     if doc.exam_attempt and context.settings.show_score_to_applicant:
         context.attempt = frappe.db.get_value(
             "Training Exam Attempt", doc.exam_attempt,
-            ["total_score", "max_score", "score_aptitude", "score_support", "score_security", "score_programming", "status"],
+            ["total_score", "max_score", "recommended_track", "status"],
             as_dict=True,
         )
     order = ["Submitted", "Exam Completed", "Decision"]

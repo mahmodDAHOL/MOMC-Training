@@ -41,8 +41,6 @@ def write(name, fields, permissions, **meta):
     open(os.path.join(folder, "__init__.py"), "a").close()
     return folder
 
-TRACKS = "\nIT End User Support\nCybersecurity\nProgramming"
-
 applicant = [
     SB("account_section", "الحساب"),
     F("applicant_name", "Data", "الاسم الكامل", read_only=1, in_list_view=1, in_global_search=1),
@@ -78,7 +76,7 @@ applicant = [
     CB("education_col"),
     F("graduation_year", "Int", "سنة التخرج"),
     F("gpa", "Float", "المعدل", precision="2"),
-    F("track_preference", "Select", "المسار المرغوب", options=TRACKS, in_list_view=1, in_standard_filter=1),
+    F("track_preference", "Link", "المسار المرغوب", options="Training Exam Domain", in_list_view=1, in_standard_filter=1),
 
     SB("files_section", "المرفقات"),
     F("photo", "Attach Image", "الصورة الشخصية"),
@@ -97,9 +95,9 @@ applicant = [
     F("exam_attempt", "Link", "محاولة الامتحان", options="Training Exam Attempt", read_only=1),
     F("exam_total", "Float", "علامة الامتحان", read_only=1, in_list_view=1),
     F("exam_passed", "Check", "تجاوز الحد الأدنى", read_only=1),
-    F("recommended_track", "Data", "المسار المقترح آلياً", read_only=1),
+    F("recommended_track", "Link", "المسار المقترح آلياً", options="Training Exam Domain", read_only=1),
     CB("decision_col"),
-    F("assigned_track", "Select", "المسار المعتمد", options=TRACKS, read_only=1, in_standard_filter=1),
+    F("assigned_track", "Link", "المسار المعتمد", options="Training Exam Domain", read_only=1, in_standard_filter=1),
     F("decision_notes", "Small Text", "ملاحظات القرار", read_only=1),
     F("decided_by", "Link", "صاحب القرار", options="User", read_only=1),
     F("decided_on", "Datetime", "تاريخ القرار", read_only=1),
@@ -115,7 +113,7 @@ write("Training Applicant", applicant,
       track_changes=1, show_preview_popup=1)
 
 question = [
-    F("section", "Select", "القسم", options="Aptitude\nSupport\nSecurity\nProgramming", reqd=1,
+    F("section", "Link", "القسم", options="Training Exam Domain", reqd=1,
       in_list_view=1, in_standard_filter=1),
     F("enabled", "Check", "مفعّل", default="1", in_list_view=1),
     F("points", "Float", "العلامة", default="2", reqd=1),
@@ -147,12 +145,8 @@ attempt = [
     F("total_score", "Float", "المجموع", in_list_view=1),
     F("max_score", "Float", "العلامة العظمى"),
     F("passed", "Check", "تجاوز الحد الأدنى", in_standard_filter=1),
-    F("recommended_track", "Data", "المسار المقترح"),
+    F("recommended_track", "Link", "المسار المقترح", options="Training Exam Domain"),
     CB("result_col"),
-    F("score_aptitude", "Float", "القدرات الذهنية"),
-    F("score_support", "Float", "دعم المستخدمين"),
-    F("score_security", "Float", "الأمن السيبراني"),
-    F("score_programming", "Float", "البرمجة"),
     SB("data_section", "البيانات الخام", collapsible=1),
     F("question_order", "JSON", "ترتيب الأسئلة"),
     F("answers", "JSON", "الإجابات"),

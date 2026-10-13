@@ -1,421 +1,422 @@
 {
- "actions": [],
- "creation": "2026-10-11 09:00:00.000000",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "account_section",
-  "applicant_name",
-  "email",
-  "phone",
-  "account_col",
-  "status",
-  "email_verified",
-  "submitted_on",
-  "last_login",
-  "personal_section",
-  "first_name",
-  "father_name",
-  "mother_name",
-  "last_name",
-  "personal_col",
-  "national_id",
-  "gender",
-  "birth_date",
-  "birth_place",
-  "address_section",
-  "governorate",
-  "registry",
-  "address_col",
-  "address",
-  "education_section",
-  "university",
-  "faculty",
-  "major",
-  "education_col",
-  "graduation_year",
-  "gpa",
-  "track_preference",
-  "files_section",
-  "photo",
-  "certificate",
-  "files_col",
-  "id_front",
-  "id_back",
-  "ocr_section",
-  "ocr_corrected_fields",
-  "ocr_col",
-  "ocr_data",
-  "exam_section",
-  "exam_attempt",
-  "exam_total",
-  "exam_passed",
-  "recommended_track",
-  "decision_col",
-  "assigned_track",
-  "decision_notes",
-  "decided_by",
-  "decided_on",
-  "consent_section",
-  "consent",
-  "consent_on"
- ],
- "fields": [
-  {
-   "fieldname": "account_section",
-   "fieldtype": "Section Break",
-   "label": "الحساب"
-  },
-  {
-   "fieldname": "applicant_name",
-   "fieldtype": "Data",
-   "label": "الاسم الكامل",
-   "read_only": 1,
-   "in_list_view": 1,
-   "in_global_search": 1
-  },
-  {
-   "fieldname": "email",
-   "fieldtype": "Data",
-   "label": "البريد الإلكتروني",
-   "options": "Email",
-   "reqd": 1,
-   "unique": 1,
-   "in_global_search": 1,
-   "search_index": 1
-  },
-  {
-   "fieldname": "phone",
-   "fieldtype": "Data",
-   "label": "رقم الهاتف",
-   "options": "Phone"
-  },
-  {
-   "fieldname": "account_col",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "label": "الحالة",
-   "options": "Draft\nSubmitted\nExam Completed\nAccepted\nRejected\nWithdrawn",
-   "default": "Draft",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "read_only": 1,
-   "search_index": 1
-  },
-  {
-   "fieldname": "email_verified",
-   "fieldtype": "Check",
-   "label": "البريد مؤكَّد",
-   "read_only": 1
-  },
-  {
-   "fieldname": "submitted_on",
-   "fieldtype": "Datetime",
-   "label": "تاريخ إرسال الطلب",
-   "read_only": 1
-  },
-  {
-   "fieldname": "last_login",
-   "fieldtype": "Datetime",
-   "label": "آخر دخول",
-   "read_only": 1
-  },
-  {
-   "fieldname": "personal_section",
-   "fieldtype": "Section Break",
-   "label": "البيانات الشخصية (حسب الهوية)"
-  },
-  {
-   "fieldname": "first_name",
-   "fieldtype": "Data",
-   "label": "الاسم"
-  },
-  {
-   "fieldname": "father_name",
-   "fieldtype": "Data",
-   "label": "اسم الأب"
-  },
-  {
-   "fieldname": "mother_name",
-   "fieldtype": "Data",
-   "label": "اسم ونسبة الأم"
-  },
-  {
-   "fieldname": "last_name",
-   "fieldtype": "Data",
-   "label": "النسبة"
-  },
-  {
-   "fieldname": "personal_col",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "national_id",
-   "fieldtype": "Data",
-   "label": "الرقم الوطني",
-   "length": 11,
-   "in_standard_filter": 1,
-   "in_global_search": 1,
-   "search_index": 1,
-   "no_copy": 1
-  },
-  {
-   "fieldname": "gender",
-   "fieldtype": "Select",
-   "label": "الجنس",
-   "options": "\nMale\nFemale"
-  },
-  {
-   "fieldname": "birth_date",
-   "fieldtype": "Date",
-   "label": "تاريخ الولادة"
-  },
-  {
-   "fieldname": "birth_place",
-   "fieldtype": "Data",
-   "label": "مكان الولادة"
-  },
-  {
-   "fieldname": "address_section",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "governorate",
-   "fieldtype": "Data",
-   "label": "الأمانة"
-  },
-  {
-   "fieldname": "registry",
-   "fieldtype": "Data",
-   "label": "القيد"
-  },
-  {
-   "fieldname": "address_col",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "address",
-   "fieldtype": "Small Text",
-   "label": "العنوان الحالي"
-  },
-  {
-   "fieldname": "education_section",
-   "fieldtype": "Section Break",
-   "label": "المؤهل العلمي والمسار"
-  },
-  {
-   "fieldname": "university",
-   "fieldtype": "Data",
-   "label": "الجامعة"
-  },
-  {
-   "fieldname": "faculty",
-   "fieldtype": "Data",
-   "label": "الكلية"
-  },
-  {
-   "fieldname": "major",
-   "fieldtype": "Data",
-   "label": "الاختصاص"
-  },
-  {
-   "fieldname": "education_col",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "graduation_year",
-   "fieldtype": "Int",
-   "label": "سنة التخرج"
-  },
-  {
-   "fieldname": "gpa",
-   "fieldtype": "Float",
-   "label": "المعدل",
-   "precision": "2"
-  },
-  {
-   "fieldname": "track_preference",
-   "fieldtype": "Select",
-   "label": "المسار المرغوب",
-   "options": "\nIT End User Support\nCybersecurity\nProgramming",
-   "in_list_view": 1,
-   "in_standard_filter": 1
-  },
-  {
-   "fieldname": "files_section",
-   "fieldtype": "Section Break",
-   "label": "المرفقات"
-  },
-  {
-   "fieldname": "photo",
-   "fieldtype": "Attach Image",
-   "label": "الصورة الشخصية"
-  },
-  {
-   "fieldname": "certificate",
-   "fieldtype": "Attach",
-   "label": "الشهادة الجامعية"
-  },
-  {
-   "fieldname": "files_col",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "id_front",
-   "fieldtype": "Attach Image",
-   "label": "صورة الهوية - الوجه الأمامي"
-  },
-  {
-   "fieldname": "id_back",
-   "fieldtype": "Attach Image",
-   "label": "صورة الهوية - الوجه الخلفي"
-  },
-  {
-   "fieldname": "ocr_section",
-   "fieldtype": "Section Break",
-   "label": "قراءة الهوية آلياً",
-   "collapsible": 1
-  },
-  {
-   "fieldname": "ocr_corrected_fields",
-   "fieldtype": "Small Text",
-   "label": "حقول عدّلها المتقدم بعد القراءة الآلية",
-   "read_only": 1,
-   "description": "الحقول التي غيّر المتقدم قيمتها عمّا قرأه النظام من الهوية — تستحق التدقيق."
-  },
-  {
-   "fieldname": "ocr_col",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "ocr_data",
-   "fieldtype": "JSON",
-   "label": "نتيجة القراءة الآلية",
-   "read_only": 1
-  },
-  {
-   "fieldname": "exam_section",
-   "fieldtype": "Section Break",
-   "label": "الامتحان والقرار"
-  },
-  {
-   "fieldname": "exam_attempt",
-   "fieldtype": "Link",
-   "label": "محاولة الامتحان",
-   "options": "Training Exam Attempt",
-   "read_only": 1
-  },
-  {
-   "fieldname": "exam_total",
-   "fieldtype": "Float",
-   "label": "علامة الامتحان",
-   "read_only": 1,
-   "in_list_view": 1
-  },
-  {
-   "fieldname": "exam_passed",
-   "fieldtype": "Check",
-   "label": "تجاوز الحد الأدنى",
-   "read_only": 1
-  },
-  {
-   "fieldname": "recommended_track",
-   "fieldtype": "Data",
-   "label": "المسار المقترح آلياً",
-   "read_only": 1
-  },
-  {
-   "fieldname": "decision_col",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "assigned_track",
-   "fieldtype": "Select",
-   "label": "المسار المعتمد",
-   "options": "\nIT End User Support\nCybersecurity\nProgramming",
-   "read_only": 1,
-   "in_standard_filter": 1
-  },
-  {
-   "fieldname": "decision_notes",
-   "fieldtype": "Small Text",
-   "label": "ملاحظات القرار",
-   "read_only": 1
-  },
-  {
-   "fieldname": "decided_by",
-   "fieldtype": "Link",
-   "label": "صاحب القرار",
-   "options": "User",
-   "read_only": 1
-  },
-  {
-   "fieldname": "decided_on",
-   "fieldtype": "Datetime",
-   "label": "تاريخ القرار",
-   "read_only": 1
-  },
-  {
-   "fieldname": "consent_section",
-   "fieldtype": "Section Break",
-   "label": "الموافقة",
-   "collapsible": 1
-  },
-  {
-   "fieldname": "consent",
-   "fieldtype": "Check",
-   "label": "وافق على سياسة استخدام البيانات",
-   "read_only": 1
-  },
-  {
-   "fieldname": "consent_on",
-   "fieldtype": "Datetime",
-   "label": "تاريخ الموافقة",
-   "read_only": 1
-  }
- ],
- "index_web_pages_for_search": 0,
- "links": [],
- "modified": "2026-10-11 09:00:00.000000",
- "modified_by": "Administrator",
- "module": "MOMC Training",
- "name": "Training Applicant",
- "owner": "Administrator",
- "permissions": [
-  {
-   "role": "System Manager",
-   "read": 1,
-   "report": 1,
-   "export": 1,
-   "print": 1,
-   "email": 1,
-   "share": 1,
-   "write": 1,
-   "delete": 1
-  },
-  {
-   "role": "Training Manager",
-   "read": 1,
-   "report": 1,
-   "export": 1,
-   "print": 1,
-   "email": 1,
-   "share": 1,
-   "write": 1
-  }
- ],
- "sort_field": "creation",
- "sort_order": "DESC",
- "states": [],
- "autoname": "format:TA-{YYYY}-{#####}",
- "naming_rule": "Expression",
- "title_field": "applicant_name",
- "show_title_field_in_link": 1,
- "image_field": "photo",
- "search_fields": "email,national_id",
- "track_changes": 1,
- "show_preview_popup": 1
+    "actions": [],
+    "creation": "2026-10-11 09:00:00.000000",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+        "account_section",
+        "applicant_name",
+        "email",
+        "phone",
+        "account_col",
+        "status",
+        "email_verified",
+        "submitted_on",
+        "last_login",
+        "personal_section",
+        "first_name",
+        "father_name",
+        "mother_name",
+        "last_name",
+        "personal_col",
+        "national_id",
+        "gender",
+        "birth_date",
+        "birth_place",
+        "address_section",
+        "governorate",
+        "registry",
+        "address_col",
+        "address",
+        "education_section",
+        "university",
+        "faculty",
+        "major",
+        "education_col",
+        "graduation_year",
+        "gpa",
+        "track_preference",
+        "files_section",
+        "photo",
+        "certificate",
+        "files_col",
+        "id_front",
+        "id_back",
+        "ocr_section",
+        "ocr_corrected_fields",
+        "ocr_col",
+        "ocr_data",
+        "exam_section",
+        "exam_attempt",
+        "exam_total",
+        "exam_passed",
+        "recommended_track",
+        "decision_col",
+        "assigned_track",
+        "decision_notes",
+        "decided_by",
+        "decided_on",
+        "consent_section",
+        "consent",
+        "consent_on"
+    ],
+    "fields": [
+        {
+            "fieldname": "account_section",
+            "fieldtype": "Section Break",
+            "label": "الحساب"
+        },
+        {
+            "fieldname": "applicant_name",
+            "fieldtype": "Data",
+            "label": "الاسم الكامل",
+            "read_only": 1,
+            "in_list_view": 1,
+            "in_global_search": 1
+        },
+        {
+            "fieldname": "email",
+            "fieldtype": "Data",
+            "label": "البريد الإلكتروني",
+            "options": "Email",
+            "reqd": 1,
+            "unique": 1,
+            "in_global_search": 1,
+            "search_index": 1
+        },
+        {
+            "fieldname": "phone",
+            "fieldtype": "Data",
+            "label": "رقم الهاتف",
+            "options": "Phone"
+        },
+        {
+            "fieldname": "account_col",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "status",
+            "fieldtype": "Select",
+            "label": "الحالة",
+            "options": "Draft\nSubmitted\nExam Completed\nAccepted\nRejected\nWithdrawn",
+            "default": "Draft",
+            "in_list_view": 1,
+            "in_standard_filter": 1,
+            "read_only": 1,
+            "search_index": 1
+        },
+        {
+            "fieldname": "email_verified",
+            "fieldtype": "Check",
+            "label": "البريد مؤكَّد",
+            "read_only": 1
+        },
+        {
+            "fieldname": "submitted_on",
+            "fieldtype": "Datetime",
+            "label": "تاريخ إرسال الطلب",
+            "read_only": 1
+        },
+        {
+            "fieldname": "last_login",
+            "fieldtype": "Datetime",
+            "label": "آخر دخول",
+            "read_only": 1
+        },
+        {
+            "fieldname": "personal_section",
+            "fieldtype": "Section Break",
+            "label": "البيانات الشخصية (حسب الهوية)"
+        },
+        {
+            "fieldname": "first_name",
+            "fieldtype": "Data",
+            "label": "الاسم"
+        },
+        {
+            "fieldname": "father_name",
+            "fieldtype": "Data",
+            "label": "اسم الأب"
+        },
+        {
+            "fieldname": "mother_name",
+            "fieldtype": "Data",
+            "label": "اسم ونسبة الأم"
+        },
+        {
+            "fieldname": "last_name",
+            "fieldtype": "Data",
+            "label": "النسبة"
+        },
+        {
+            "fieldname": "personal_col",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "national_id",
+            "fieldtype": "Data",
+            "label": "الرقم الوطني",
+            "length": 11,
+            "in_standard_filter": 1,
+            "in_global_search": 1,
+            "search_index": 1,
+            "no_copy": 1
+        },
+        {
+            "fieldname": "gender",
+            "fieldtype": "Select",
+            "label": "الجنس",
+            "options": "\nMale\nFemale"
+        },
+        {
+            "fieldname": "birth_date",
+            "fieldtype": "Date",
+            "label": "تاريخ الولادة"
+        },
+        {
+            "fieldname": "birth_place",
+            "fieldtype": "Data",
+            "label": "مكان الولادة"
+        },
+        {
+            "fieldname": "address_section",
+            "fieldtype": "Section Break"
+        },
+        {
+            "fieldname": "governorate",
+            "fieldtype": "Data",
+            "label": "الأمانة"
+        },
+        {
+            "fieldname": "registry",
+            "fieldtype": "Data",
+            "label": "القيد"
+        },
+        {
+            "fieldname": "address_col",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "address",
+            "fieldtype": "Small Text",
+            "label": "العنوان الحالي"
+        },
+        {
+            "fieldname": "education_section",
+            "fieldtype": "Section Break",
+            "label": "المؤهل العلمي والمسار"
+        },
+        {
+            "fieldname": "university",
+            "fieldtype": "Data",
+            "label": "الجامعة"
+        },
+        {
+            "fieldname": "faculty",
+            "fieldtype": "Data",
+            "label": "الكلية"
+        },
+        {
+            "fieldname": "major",
+            "fieldtype": "Data",
+            "label": "الاختصاص"
+        },
+        {
+            "fieldname": "education_col",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "graduation_year",
+            "fieldtype": "Int",
+            "label": "سنة التخرج"
+        },
+        {
+            "fieldname": "gpa",
+            "fieldtype": "Float",
+            "label": "المعدل",
+            "precision": "2"
+        },
+        {
+            "fieldname": "track_preference",
+            "fieldtype": "Link",
+            "label": "المسار المرغوب",
+            "options": "Training Exam Domain",
+            "in_list_view": 1,
+            "in_standard_filter": 1
+        },
+        {
+            "fieldname": "files_section",
+            "fieldtype": "Section Break",
+            "label": "المرفقات"
+        },
+        {
+            "fieldname": "photo",
+            "fieldtype": "Attach Image",
+            "label": "الصورة الشخصية"
+        },
+        {
+            "fieldname": "certificate",
+            "fieldtype": "Attach",
+            "label": "الشهادة الجامعية"
+        },
+        {
+            "fieldname": "files_col",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "id_front",
+            "fieldtype": "Attach Image",
+            "label": "صورة الهوية - الوجه الأمامي"
+        },
+        {
+            "fieldname": "id_back",
+            "fieldtype": "Attach Image",
+            "label": "صورة الهوية - الوجه الخلفي"
+        },
+        {
+            "fieldname": "ocr_section",
+            "fieldtype": "Section Break",
+            "label": "قراءة الهوية آلياً",
+            "collapsible": 1
+        },
+        {
+            "fieldname": "ocr_corrected_fields",
+            "fieldtype": "Small Text",
+            "label": "حقول عدّلها المتقدم بعد القراءة الآلية",
+            "read_only": 1,
+            "description": "الحقول التي غيّر المتقدم قيمتها عمّا قرأه النظام من الهوية — تستحق التدقيق."
+        },
+        {
+            "fieldname": "ocr_col",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "ocr_data",
+            "fieldtype": "JSON",
+            "label": "نتيجة القراءة الآلية",
+            "read_only": 1
+        },
+        {
+            "fieldname": "exam_section",
+            "fieldtype": "Section Break",
+            "label": "الامتحان والقرار"
+        },
+        {
+            "fieldname": "exam_attempt",
+            "fieldtype": "Link",
+            "label": "محاولة الامتحان",
+            "options": "Training Exam Attempt",
+            "read_only": 1
+        },
+        {
+            "fieldname": "exam_total",
+            "fieldtype": "Float",
+            "label": "علامة الامتحان",
+            "read_only": 1,
+            "in_list_view": 1
+        },
+        {
+            "fieldname": "exam_passed",
+            "fieldtype": "Check",
+            "label": "تجاوز الحد الأدنى",
+            "read_only": 1
+        },
+        {
+            "fieldname": "recommended_track",
+            "fieldtype": "Link",
+            "label": "المسار المقترح آلياً",
+            "options": "Training Exam Domain",
+            "read_only": 1
+        },
+        {
+            "fieldname": "decision_col",
+            "fieldtype": "Column Break"
+        },
+        {
+            "fieldname": "assigned_track",
+            "fieldtype": "Link",
+            "label": "المسار المعتمد",
+            "options": "Training Exam Domain",
+            "read_only": 1,
+            "in_standard_filter": 1
+        },
+        {
+            "fieldname": "decision_notes",
+            "fieldtype": "Small Text",
+            "label": "ملاحظات القرار",
+            "read_only": 1
+        },
+        {
+            "fieldname": "decided_by",
+            "fieldtype": "Link",
+            "label": "صاحب القرار",
+            "options": "User",
+            "read_only": 1
+        },
+        {
+            "fieldname": "decided_on",
+            "fieldtype": "Datetime",
+            "label": "تاريخ القرار",
+            "read_only": 1
+        },
+        {
+            "fieldname": "consent_section",
+            "fieldtype": "Section Break",
+            "label": "الموافقة",
+            "collapsible": 1
+        },
+        {
+            "fieldname": "consent",
+            "fieldtype": "Check",
+            "label": "وافق على سياسة استخدام البيانات",
+            "read_only": 1
+        },
+        {
+            "fieldname": "consent_on",
+            "fieldtype": "Datetime",
+            "label": "تاريخ الموافقة",
+            "read_only": 1
+        }
+    ],
+    "index_web_pages_for_search": 0,
+    "links": [],
+    "modified": "2026-10-11 09:00:00.000000",
+    "modified_by": "Administrator",
+    "module": "MOMC Training",
+    "name": "Training Applicant",
+    "owner": "Administrator",
+    "permissions": [
+        {
+            "role": "System Manager",
+            "read": 1,
+            "report": 1,
+            "export": 1,
+            "print": 1,
+            "email": 1,
+            "share": 1,
+            "write": 1,
+            "delete": 1
+        },
+        {
+            "role": "Training Manager",
+            "read": 1,
+            "report": 1,
+            "export": 1,
+            "print": 1,
+            "email": 1,
+            "share": 1,
+            "write": 1
+        }
+    ],
+    "sort_field": "creation",
+    "sort_order": "DESC",
+    "states": [],
+    "autoname": "format:TA-{YYYY}-{#####}",
+    "naming_rule": "Expression",
+    "title_field": "applicant_name",
+    "show_title_field_in_link": 1,
+    "image_field": "photo",
+    "search_fields": "email,national_id",
+    "track_changes": 1,
+    "show_preview_popup": 1
 }

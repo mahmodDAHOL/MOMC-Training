@@ -34,10 +34,7 @@
 		{% if attempt %}
 		<h3 style="margin-top:20px">نتيجتك: {{ attempt.total_score | int }} من {{ attempt.max_score | int }}</h3>
 		<div class="scores">
-			<div><b>{{ attempt.score_aptitude | int }}</b>قدرات ذهنية</div>
-			<div><b>{{ attempt.score_support | int }}</b>دعم المستخدمين</div>
-			<div><b>{{ attempt.score_security | int }}</b>الأمن السيبراني</div>
-			<div><b>{{ attempt.score_programming | int }}</b>البرمجة</div>
+			<div>{{ track_ar.get(attempt.recommended_track, attempt.recommended_track) }}</div>
 		</div>
 		{% endif %}
 	</div>
