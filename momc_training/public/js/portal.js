@@ -126,7 +126,22 @@
 		const error = $("[data-error]", form);
 		const info = $("[data-info]", form);
 		const stepButtons = $$("[data-step]", root);
+		const studyField = $('select[name="study_field"]', form);
+		const trackPreference = $("[data-track-preference]", form);
+		const noExamNote = $("[data-no-exam-note]", form);
 		let current = 1;
+
+		function updateExamFields() {
+			const requiresExam = studyField.value === studyField.dataset.examStudyField;
+			trackPreference.hidden = !requiresExam;
+			noExamNote.hidden = !studyField.value || requiresExam;
+			if (!requiresExam) {
+				$$('input[name="track_preference"]', form).forEach((input) => { input.checked = false; });
+			}
+		}
+
+		studyField.addEventListener("change", updateExamFields);
+		updateExamFields();
 
 		const paneValues = (pane) => {
 			const values = {};
@@ -169,7 +184,7 @@
 			});
 			$$(".step-pane", form).forEach((p) => p.classList.toggle("is-active", Number(p.dataset.pane) === step));
 			current = step;
-			if (step === 5) buildReview();
+			if (step === 6) buildReview();
 			form.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
 			$(`[data-pane="${step}"] h2`, form)?.focus?.();
 		}
@@ -244,8 +259,10 @@
 				const value = el.tagName === "SELECT" ? el.options[el.selectedIndex]?.text : el.value;
 				rows.push([labelOf(el), value]);
 			});
-			const track = $('input[name="track_preference"]:checked', form);
-			rows.push(["المسار المرغوب", track ? track.parentElement.textContent.trim() : ""]);
+			if (studyField.value === studyField.dataset.examStudyField) {
+				const track = $('input[name="track_preference"]:checked', form);
+				rows.push(["المسار المرغوب", track ? track.parentElement.textContent.trim() : ""]);
+			}
 			$$("[data-upload]", form).forEach((zone) =>
 				rows.push([$(".dz-label strong", zone).textContent + " (" + zone.closest("section").querySelector("h2").textContent + ")",
 					zone.classList.contains("has-file") ? "مرفوع" : ""])
@@ -263,7 +280,12 @@
 		$('[data-action="submit-profile"]', form)?.addEventListener("click", async (event) => {
 			show(error, "");
 			try {
-				const r = await busy(event.currentTarget, () => api("profile.submit"));
+				const track = $('input[name="track_preference"]:checked', form);
+				const data = {
+					study_field: studyField.value,
+					track_preference: track?.value || "",
+				};
+				const r = await busy(event.currentTarget, () => api("profile.submit", data));
 				location.href = r.next;
 			} catch (e) {
 				show(error, e.message);

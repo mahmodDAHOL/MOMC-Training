@@ -6,6 +6,22 @@ from frappe.utils import cint, flt, getdate, now_datetime, nowdate
 from momc_training.ocr.text import clean, to_latin_digits, valid_national_id
 
 DECISIONS = ("Accepted", "Rejected")
+PROFILE_OPTIONS = {
+    "study_field": (
+        "كلية الإعلام", "قسم الأدب الإنجليزي", "قسم الأدب العربي", "قسم الأدب الفرنسي", "قسم الجغرافية",
+        "قسم علم الاجتماع", "كلية الحقوق", "كلية الهندسة المعلوماتية", "اقتصاد وعلوم إدارية", "خيارات أخرى",
+    ),
+    "education_status": (
+        "بكالوريوس سنة 4", "بكالوريوس سنة 5", "خريج جامعي", "دراسات عليا", "خريج دراسات عليا",
+    ),
+    "current_employment": ("نعم", "لا"),
+    "english_level": ("مبتدئ", "متوسط", "جيد", "ممتاز"),
+    "full_time_available": ("نعم", "لا"),
+    "part_time_available": ("نعم", "لا"),
+    "has_laptop": ("نعم", "لا"),
+    "ministry_interest": ("نعم", "لا", "ربما"),
+    "war_affected": ("نعم", "لا"),
+}
 
 
 class TrainingApplicant(Document):
@@ -17,6 +33,11 @@ class TrainingApplicant(Document):
 
     def validate(self):
         self.email = (self.email or "").strip().lower()
+        if self.applicant_age and not 1 <= cint(self.applicant_age) <= 120:
+            frappe.throw(_("العمر غير صحيح"))
+        for field, options in PROFILE_OPTIONS.items():
+            if self.get(field) and self.get(field) not in options:
+                frappe.throw(_("قيمة غير صالحة للحقل {0}").format(self.meta.get_label(field)))
         if self.national_id:
             self.national_id = to_latin_digits(self.national_id).strip()
             if not valid_national_id(self.national_id):

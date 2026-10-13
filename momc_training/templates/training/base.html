@@ -23,7 +23,7 @@
 			<nav class="ta-nav" aria-label="القائمة">
 				{% if applicant %}
 					<a href="/training/profile" {% if page == "profile" %}aria-current="page"{% endif %}>ملفي</a>
-					<a href="/training/exam" {% if page == "exam" %}aria-current="page"{% endif %}>الامتحان</a>
+					{% if requires_exam %}<a href="/training/exam" {% if page == "exam" %}aria-current="page"{% endif %}>الامتحان</a>{% endif %}
 					<a href="/training/status" {% if page == "status" %}aria-current="page"{% endif %}>حالة الطلب</a>
 					<button type="button" data-action="logout">خروج</button>
 				{% else %}

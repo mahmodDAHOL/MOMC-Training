@@ -1,42 +1,44 @@
 {% extends "templates/training/base.html" %}
+{% block title %}إنشاء حساب{% endblock %}
 {% block content %}
-<section class="hero">
-	<div>
-		<h1>ثلاثة أشهر من العمل الحقيقي في تقانة المعلومات</h1>
-		<p class="lead">برنامج تدريب عملي للخريجين الجدد في مديرية تقانة المعلومات والتحول الرقمي. تعمل مع فرق المديرية على أنظمة الوزارة بإشراف مرشد، وتتخرج بمشروع تعرضه أمام لجنة.</p>
-		<div class="actions">
-			{% if settings.registration_open %}
-			<a class="btn btn-primary" href="/training/register">إنشاء حساب والتقديم</a>
-			{% else %}
-			<p class="alert alert-info is-shown">التسجيل مغلق حالياً.</p>
-			{% endif %}
-			<a class="btn btn-ghost" href="/training/login">لدي حساب</a>
-		</div>
-	</div>
+<div class="ta-split">
 	<div class="panel">
-		<h2>خطوات التقديم</h2>
-		<ol class="timeline">
-			<li><strong>أنشئ حساباً ببريدك الإلكتروني</strong><span class="muted small">ستصلك رسالة برمز تأكيد.</span></li>
-			<li><strong>صوّر هويتك</strong><span class="muted small">يقرأ النظام بياناتك منها، وتراجعها أنت قبل الحفظ.</span></li>
-			<li><strong>أكمل مؤهلك وارفع الشهادة والصورة</strong></li>
-			<li><strong>أدِّ امتحان القبول</strong><span class="muted small">{{ settings.exam_duration_minutes or 90 }} دقيقة: قدرات ذهنية وأساسيات المسارات الثلاثة.</span></li>
-		</ol>
+		<h1>إنشاء حساب</h1>
+		<p class="muted">حسابك هنا منفصل عن أنظمة الوزارة الداخلية، ويُستخدم لمتابعة طلبك فقط.</p>
+		{% if not settings.registration_open %}
+		<p class="alert alert-info is-shown">التسجيل مغلق حالياً.</p>
+		{% else %}
+		<form data-form="register" novalidate>
+			<div class="alert alert-error" role="alert" data-error></div>
+			<div class="field">
+				<label for="email">البريد الإلكتروني</label>
+				<input class="input" id="email" name="email" type="email" dir="ltr" autocomplete="email" required>
+			</div>
+			<div class="field">
+				<label for="password">كلمة المرور</label>
+				<input class="input" id="password" name="password" type="password" dir="ltr" autocomplete="new-password"
+					minlength="10" required>
+				<div class="hint">10 محارف على الأقل، فيها أحرف وأرقام.</div>
+			</div>
+			<div class="field">
+				<label class="check">
+					<input type="checkbox" name="consent" value="1" required>
+					<span>أوافق على أن تستخدم الوزارة بياناتي وصورة هويتي لدراسة طلبي في البرنامج فقط.</span>
+				</label>
+			</div>
+			<button class="btn btn-primary btn-block" type="submit">إنشاء الحساب وإرسال رمز التأكيد</button>
+		</form>
+		{% endif %}
+		<p class="small muted" style="margin-top:16px">لديك حساب؟ <a href="/training/login">سجّل الدخول</a></p>
 	</div>
-</section>
-
-<h2>المسارات</h2>
-<div class="tracks">
-	<div class="track">
-		<h3>دعم المستخدمين</h3>
-		<p class="muted">تجميع الأجهزة وتثبيت الأنظمة، الشبكات، Active Directory، ونظام التذاكر. تنهي البرنامج بمناوبة دعم كاملة.</p>
-	</div>
-	<div class="track">
-		<h3>الأمن السيبراني</h3>
-		<p class="muted">تقوية الأنظمة، الجدران النارية، المراقبة بـ Wazuh، تقييم الثغرات والاستجابة للحوادث داخل مختبر معزول.</p>
-	</div>
-	<div class="track">
-		<h3>البرمجة</h3>
-		<p class="muted">Python وقواعد البيانات والويب، ثم تطوير وحدات على ERPNext. تنهي البرنامج بتطبيق يخدم قسماً في الوزارة.</p>
+	<div>
+		<h2>ما الذي ستحتاجه</h2>
+		<ul>
+			<li>هويتك الشخصية (الوجهان).</li>
+			<li>صورة شخصية حديثة بخلفية فاتحة.</li>
+			<li>الشهادة الجامعية أو وثيقة التخرج (صورة أو PDF).</li>
+		</ul>
+		{% if settings.privacy_text %}<div class="panel small">{{ settings.privacy_text }}</div>{% endif %}
 	</div>
 </div>
 {% endblock %}

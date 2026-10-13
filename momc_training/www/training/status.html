@@ -4,18 +4,31 @@
 <div class="ta-narrow">
 	<h1>حالة طلبك</h1>
 	<p class="muted">رقم الطلب <b dir="ltr">{{ doc.name }}</b></p>
+	{% if requires_exam %}
 	<ol class="status-track">
 		<li class="is-done">إنشاء الحساب والملف</li>
 		<li class="{{ 'is-current' if stage == 0 else 'is-done' }}">إرسال الطلب</li>
 		<li class="{{ 'is-current' if stage == 1 else ('is-done' if stage > 1 else '') }}">امتحان القبول</li>
 		<li class="{{ 'is-current' if stage == 2 else '' }}">القرار</li>
 	</ol>
+	{% else %}
+	<ol class="status-track">
+		<li class="is-done">إنشاء الحساب والملف</li>
+		<li class="is-done">استلام المعلومات</li>
+		<li class="is-current">مراجعة الطلب والقرار</li>
+	</ol>
+	{% endif %}
 
 	<div class="panel">
 		{% if doc.status == "Submitted" %}
+			{% if requires_exam %}
 			<h2>طلبك مكتمل — الخطوة التالية هي الامتحان</h2>
 			<p>خصّص {{ settings.exam_duration_minutes or 90 }} دقيقة متواصلة بلا مقاطعة قبل البدء.</p>
 			<a class="btn btn-primary" href="/training/exam">الانتقال إلى الامتحان</a>
+			{% else %}
+			<h2>استلمنا معلوماتك</h2>
+			<p>تم استلام طلبك ورقمه <b dir="ltr">{{ doc.name }}</b>. لا يتطلب التقديم في مجال دراستك امتحاناً، وستتم مراجعة معلوماتك من قبل اللجنة.</p>
+			{% endif %}
 		{% elif doc.status == "Exam Completed" %}
 			<h2>استلمنا إجاباتك</h2>
 			<p>تدرس اللجنة الطلبات ونتائج الامتحان، وسيصلك القرار على بريدك <b dir="ltr">{{ doc.email | e }}</b>.</p>

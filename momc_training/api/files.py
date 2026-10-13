@@ -1,4 +1,4 @@
-"""Applicant uploads: photo, certificate and both sides of the national ID.
+"""Applicant uploads: profile documents, photo and both sides of the national ID.
 
 Files are stored as *private* Frappe File records attached to the applicant,
 so desk users see them on the form and nobody else can fetch them. The
@@ -22,6 +22,9 @@ KINDS = {
     "id_front": "الهوية - الوجه الأمامي",
     "id_back": "الهوية - الوجه الخلفي",
     "certificate": "الشهادة",
+    "cv": "السيرة الذاتية",
+    "work_sample": "نموذج العمل",
+    "recommendation_letter": "رسالة التوصية",
 }
 OCR_SIDE = {"id_front": "front", "id_back": "back"}
 GENDER_VALUE = {"ذكر": "Male", "أنثى": "Female"}

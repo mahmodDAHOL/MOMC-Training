@@ -49,10 +49,18 @@ def send_existing_account_notice(email: str) -> None:
 
 
 def send_submitted(doc) -> None:
-    link = get_url("/training/exam")
-    body = f"""<p>مرحباً {escape_html(doc.first_name or '')}،</p>
+    from momc_training.utils.admission import requires_exam
+
+    if requires_exam(doc.study_field):
+        link = get_url("/training/exam")
+        body = f"""<p>مرحباً {escape_html(doc.first_name or '')}،</p>
 <p>استلمنا طلبك ورقمه <b dir="ltr">{doc.name}</b>. الخطوة التالية هي امتحان القبول.</p>
 <p><a href="{link}" style="background:{TEAL};color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none">الانتقال إلى الامتحان</a></p>"""
+    else:
+        link = get_url("/training/status")
+        body = f"""<p>مرحباً {escape_html(doc.first_name or '')}،</p>
+<p>استلمنا معلومات طلبك ورقمه <b dir="ltr">{doc.name}</b>. لا يتطلب التقديم في مجال دراستك امتحاناً، وستتم مراجعة معلوماتك من قبل اللجنة.</p>
+<p><a href="{link}">متابعة حالة الطلب</a></p>"""
     _send(doc.email, "تم استلام طلبك", _layout("تم استلام طلبك", body))
 
 

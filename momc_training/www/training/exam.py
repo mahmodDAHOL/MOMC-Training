@@ -1,10 +1,13 @@
 import frappe
 
+from momc_training.utils.admission import requires_exam
 from momc_training.utils.portal import build, redirect
 
 
 def get_context(context):
     build(context, "exam", signed_in=True)
+    if not requires_exam(context.applicant.study_field):
+        redirect("/training/status")
     status = context.applicant.status
     if status == "Draft":
         redirect("/training/profile")

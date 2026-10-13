@@ -1,10 +1,12 @@
 import json
+from unittest.mock import patch
 
 import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_to_date, now_datetime
 
 from momc_training.exam import service
+from momc_training.api import profile as profile_api
 from momc_training.momc_training.doctype.training_applicant.training_applicant import decide
 from momc_training.ocr.text import to_latin_digits
 
@@ -41,9 +43,59 @@ class TestTrainingApplicant(FrappeTestCase):
         with self.assertRaises(frappe.ValidationError):
             make_applicant("nid3@test.sy", national_id="123")
 
+    def test_admission_profile_fields_are_saved_and_validated(self):
+        doc = make_applicant(
+            "admission-fields@test.sy",
+            applicant_age=26,
+            study_field="كلية الإعلام",
+            education_status="خريج جامعي",
+            current_employment="لا",
+            english_level="جيد",
+            full_time_available="نعم",
+            has_laptop="نعم",
+            ministry_interest="ربما",
+            war_affected="لا",
+            motivation="خبرة في الإعلام\nورغبة في خدمة الجمهور",
+        )
+        self.assertEqual(doc.applicant_age, 26)
+        self.assertEqual(doc.study_field, "كلية الإعلام")
+        self.assertEqual(doc.motivation, "خبرة في الإعلام\nورغبة في خدمة الجمهور")
+        with self.assertRaises(frappe.ValidationError):
+            make_applicant("invalid-study-field@test.sy", study_field="غير موجود")
+        with self.assertRaises(frappe.ValidationError):
+            make_applicant("invalid-age@test.sy", applicant_age=121)
+
+    def test_non_it_profile_submission_skips_exam_and_track_requirement(self):
+        values = {field: "value" for field in profile_api.REQUIRED}
+        values.update(study_field="كلية الهندسة المعلوماتية", track_preference="Communications")
+        doc = type(
+            "Applicant",
+            (),
+            {
+                **values,
+                "name": "APP-TEST",
+                "status": "Draft",
+                "get": lambda self, field: values.get(field),
+                "save": lambda self, **kwargs: None,
+            },
+        )()
+
+        with patch.object(profile_api.session, "require", return_value=doc.name), \
+             patch.object(profile_api.frappe, "get_doc", return_value=doc), \
+             patch.object(profile_api.mail, "send_submitted"):
+            result = profile_api.submit.__wrapped__(
+                study_field="كلية الإعلام", track_preference=""
+            )
+
+        self.assertEqual(result["next"], "/training/status")
+        self.assertEqual(doc.status, "Submitted")
+        self.assertIsNone(doc.track_preference)
+
     def test_exam_expires_and_scores_saved_answers(self):
         domain = get_exam_domain()
-        doc = make_applicant("exam@test.sy", track_preference=domain)
+        doc = make_applicant(
+            "exam@test.sy", study_field="كلية الهندسة المعلوماتية", track_preference=domain
+        )
         doc.db_set("status", "Submitted")
         attempt = service.start(doc.name)
         order = json.loads(attempt.question_order)
@@ -70,7 +122,11 @@ class TestTrainingApplicant(FrappeTestCase):
             service.start(doc.name)
 
     def test_domain_only_exam_passes_at_half_of_available_points(self):
-        doc = make_applicant("domain-exam@test.sy", track_preference=get_exam_domain())
+        doc = make_applicant(
+            "domain-exam@test.sy",
+            study_field="كلية الهندسة المعلوماتية",
+            track_preference=get_exam_domain(),
+        )
         doc.db_set("status", "Submitted")
         attempt = service.start(doc.name)
         order = json.loads(attempt.question_order)
@@ -109,7 +165,11 @@ class TestTrainingApplicant(FrappeTestCase):
         self.assertEqual(service.submit(doc.name).status, "Submitted")
 
     def test_answers_after_deadline_are_refused(self):
-        doc = make_applicant("late@test.sy", track_preference=get_exam_domain())
+        doc = make_applicant(
+            "late@test.sy",
+            study_field="كلية الهندسة المعلوماتية",
+            track_preference=get_exam_domain(),
+        )
         doc.db_set("status", "Submitted")
         attempt = service.start(doc.name)
         attempt.db_set("deadline", add_to_date(now_datetime(), minutes=-2))
@@ -117,6 +177,13 @@ class TestTrainingApplicant(FrappeTestCase):
         with self.assertRaises(frappe.ValidationError):
             service.save_answer(doc.name, q, 0)
         self.assertEqual(frappe.db.get_value("Training Exam Attempt", attempt.name, "status"), "Expired")
+
+    def test_non_it_applicant_does_not_start_exam(self):
+        doc = make_applicant("no-exam@test.sy", study_field="كلية الإعلام")
+        doc.db_set("status", "Submitted")
+
+        with self.assertRaises(frappe.ValidationError):
+            service.start(doc.name)
 
     def test_decide_accept_sets_track_and_status(self):
         frappe.flags.mute_emails = True

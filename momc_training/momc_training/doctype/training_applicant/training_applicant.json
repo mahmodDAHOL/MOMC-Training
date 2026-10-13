@@ -19,6 +19,7 @@
         "mother_name",
         "last_name",
         "personal_col",
+        "applicant_age",
         "national_id",
         "gender",
         "birth_date",
@@ -26,19 +27,41 @@
         "address_section",
         "governorate",
         "registry",
+        "residence_city",
         "address_col",
         "address",
         "education_section",
         "university",
         "faculty",
         "major",
+        "study_field",
+        "study_field_other",
+        "education_status",
+        "graduate_specialty",
         "education_col",
         "graduation_year",
         "gpa",
         "track_preference",
+        "english_level",
+        "other_languages",
+        "availability_section",
+        "current_employment",
+        "current_job",
+        "full_time_available",
+        "part_time_available",
+        "has_laptop",
+        "ministry_interest",
+        "motivation",
+        "war_affected",
+        "war_affected_details",
+        "referral_name",
+        "work_sample_description",
         "files_section",
         "photo",
         "certificate",
+        "cv",
+        "work_sample",
+        "recommendation_letter",
         "files_col",
         "id_front",
         "id_back",
@@ -153,6 +176,11 @@
             "fieldtype": "Column Break"
         },
         {
+            "fieldname": "applicant_age",
+            "fieldtype": "Int",
+            "label": "العمر"
+        },
+        {
             "fieldname": "national_id",
             "fieldtype": "Data",
             "label": "الرقم الوطني",
@@ -193,6 +221,11 @@
             "label": "القيد"
         },
         {
+            "fieldname": "residence_city",
+            "fieldtype": "Data",
+            "label": "مدينة الإقامة الحالية"
+        },
+        {
             "fieldname": "address_col",
             "fieldtype": "Column Break"
         },
@@ -222,6 +255,28 @@
             "label": "الاختصاص"
         },
         {
+            "fieldname": "study_field",
+            "fieldtype": "Select",
+            "label": "مجال الدراسة",
+            "options": "\nكلية الإعلام\nقسم الأدب الإنجليزي\nقسم الأدب العربي\nقسم الأدب الفرنسي\nقسم الجغرافية\nقسم علم الاجتماع\nكلية الحقوق\nكلية الهندسة المعلوماتية\nاقتصاد وعلوم إدارية\nخيارات أخرى"
+        },
+        {
+            "fieldname": "study_field_other",
+            "fieldtype": "Data",
+            "label": "اسم مجال الدراسة إذا اخترت خيارات أخرى"
+        },
+        {
+            "fieldname": "education_status",
+            "fieldtype": "Select",
+            "label": "الحالة التعليمية",
+            "options": "\nبكالوريوس سنة 4\nبكالوريوس سنة 5\nخريج جامعي\nدراسات عليا\nخريج دراسات عليا"
+        },
+        {
+            "fieldname": "graduate_specialty",
+            "fieldtype": "Data",
+            "label": "تخصص الدراسات العليا"
+        },
+        {
             "fieldname": "education_col",
             "fieldtype": "Column Break"
         },
@@ -245,6 +300,83 @@
             "in_standard_filter": 1
         },
         {
+            "fieldname": "english_level",
+            "fieldtype": "Select",
+            "label": "مستوى اللغة الإنجليزية",
+            "options": "\nمبتدئ\nمتوسط\nجيد\nممتاز"
+        },
+        {
+            "fieldname": "other_languages",
+            "fieldtype": "Small Text",
+            "label": "لغات أخرى ومستواها"
+        },
+        {
+            "fieldname": "availability_section",
+            "fieldtype": "Section Break",
+            "label": "العمل والتفرغ والدافع"
+        },
+        {
+            "fieldname": "current_employment",
+            "fieldtype": "Select",
+            "label": "هل أنت ملتزم بعمل حالياً؟",
+            "options": "\nنعم\nلا"
+        },
+        {
+            "fieldname": "current_job",
+            "fieldtype": "Data",
+            "label": "ما هو عملك الحالي؟"
+        },
+        {
+            "fieldname": "full_time_available",
+            "fieldtype": "Select",
+            "label": "هل أنت متفرغ وقادر على الالتزام بدوام كامل؟",
+            "options": "\nنعم\nلا"
+        },
+        {
+            "fieldname": "part_time_available",
+            "fieldtype": "Select",
+            "label": "هل تستطيع الالتزام بدوام جزئي؟",
+            "options": "\nنعم\nلا"
+        },
+        {
+            "fieldname": "has_laptop",
+            "fieldtype": "Select",
+            "label": "هل لديك حاسوب محمول متاح للتدريب؟",
+            "options": "\nنعم\nلا"
+        },
+        {
+            "fieldname": "ministry_interest",
+            "fieldtype": "Select",
+            "label": "هل ترى نفسك تعمل في الوزارة؟",
+            "options": "\nنعم\nلا\nربما"
+        },
+        {
+            "fieldname": "motivation",
+            "fieldtype": "Long Text",
+            "label": "ما الذي يحفزك للعمل في الوزارة وما الذي ستضيفه؟"
+        },
+        {
+            "fieldname": "war_affected",
+            "fieldtype": "Select",
+            "label": "هل أنت من مصابي الحرب أو من أبناء شهداء الثورة؟",
+            "options": "\nنعم\nلا"
+        },
+        {
+            "fieldname": "war_affected_details",
+            "fieldtype": "Small Text",
+            "label": "تفاصيل الإصابة أو اسم الشهيد"
+        },
+        {
+            "fieldname": "referral_name",
+            "fieldtype": "Data",
+            "label": "اسم الشخص الذي أوصى لك بالتدريب"
+        },
+        {
+            "fieldname": "work_sample_description",
+            "fieldtype": "Small Text",
+            "label": "وصف نموذج العمل أو المشروع"
+        },
+        {
             "fieldname": "files_section",
             "fieldtype": "Section Break",
             "label": "المرفقات"
@@ -258,6 +390,21 @@
             "fieldname": "certificate",
             "fieldtype": "Attach",
             "label": "الشهادة الجامعية"
+        },
+        {
+            "fieldname": "cv",
+            "fieldtype": "Attach",
+            "label": "السيرة الذاتية"
+        },
+        {
+            "fieldname": "work_sample",
+            "fieldtype": "Attach",
+            "label": "نموذج عمل أو مشروع ذي صلة"
+        },
+        {
+            "fieldname": "recommendation_letter",
+            "fieldtype": "Attach",
+            "label": "رسالة التوصية"
         },
         {
             "fieldname": "files_col",

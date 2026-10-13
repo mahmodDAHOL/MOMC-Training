@@ -17,6 +17,7 @@ from frappe import _
 from frappe.utils import add_to_date, get_datetime, now_datetime
 
 from momc_training.exam.scoring import Rules, score
+from momc_training.utils.admission import requires_exam
 from momc_training.utils.domains import get_track_ar
 
 LETTERS = "ABCD"
@@ -41,13 +42,15 @@ def active_attempt(applicant: str):
 
 
 def start(applicant: str, ip: str = "", user_agent: str = ""):
+    applicant_doc = frappe.db.get_value(
+        "Training Applicant", applicant, ["status", "track_preference", "study_field"], as_dict=True
+    )
+    if not applicant_doc or not requires_exam(applicant_doc.study_field):
+        frappe.throw(_("الامتحان مخصص لخريجي كلية الهندسة المعلوماتية"))
     settings = _settings()
     if not settings.exam_open:
         frappe.throw(_("الامتحان غير متاح حالياً"))
-    applicant_doc = frappe.db.get_value(
-        "Training Applicant", applicant, ["status", "track_preference"], as_dict=True
-    )
-    status = applicant_doc.status if applicant_doc else None
+    status = applicant_doc.status
     existing = active_attempt(applicant)
     if existing:
         if existing.status == "In Progress":

@@ -9,6 +9,7 @@ from functools import lru_cache
 import frappe
 
 from momc_training.utils.domains import get_track_ar
+from momc_training.utils.admission import requires_exam
 from momc_training.utils import session
 
 STATUS_AR = {
@@ -76,14 +77,18 @@ def build(context, page: str, signed_in: bool | None = None):
                 "applicant_name",
                 "exam_attempt",
                 "track_preference",
+                "study_field",
             ],
             as_dict=True,
         )
+        context.requires_exam = bool(context.applicant and requires_exam(context.applicant.study_field))
         if not context.applicant:  # account removed from the desk
             session.destroy()
             data = None
     if signed_in is True and not data:
         redirect("/training/login")
+    if not data:
+        context.requires_exam = False
     if signed_in is False and data:
         redirect(home_for(context.applicant.status))
     return context

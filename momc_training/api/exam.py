@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import frappe
+from frappe import _
 from frappe.rate_limiter import rate_limit
 
 from momc_training.exam import service
+from momc_training.utils.admission import requires_exam
 from momc_training.utils import session
 
 
@@ -21,6 +23,9 @@ def start():
 @frappe.whitelist(allow_guest=True, methods=["GET"])
 def state():
     applicant = session.require(check_csrf=False)
+    study_field = frappe.db.get_value("Training Applicant", applicant, "study_field")
+    if not requires_exam(study_field):
+        frappe.throw(_("الامتحان مخصص لخريجي كلية الهندسة المعلوماتية"))
     attempt = service.active_attempt(applicant)
     if not attempt:
         return {"status": "Not Started"}

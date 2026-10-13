@@ -2,8 +2,8 @@
 
 Images are decoded and re-encoded as JPEG: this drops EXIF (including GPS),
 neutralises polyglot files, applies the camera orientation and caps size.
-PDFs are accepted for the certificate only, by signature and with active
-content (JavaScript / auto-actions / embedded files) rejected.
+PDFs are accepted for document uploads by signature, with active content
+(JavaScript / auto-actions / embedded files) rejected.
 """
 
 from __future__ import annotations
@@ -16,6 +16,7 @@ from PIL import Image, ImageOps, UnidentifiedImageError
 MAX_SIDE = 2400
 MAX_PIXELS = 40_000_000  # decompression-bomb guard
 _PDF_ACTIVE = re.compile(rb"/(JavaScript|JS|OpenAction|AA|Launch|EmbeddedFile|RichMedia|XFA)\b")
+_PDF_KINDS = {"certificate", "cv", "work_sample", "recommendation_letter"}
 
 
 class UploadRejected(ValueError):
@@ -67,6 +68,6 @@ def sanitise(data: bytes, kind: str, max_bytes: int) -> tuple[bytes, str]:
         raise UploadRejected("الملف فارغ.")
     if len(data) > max_bytes:
         raise UploadRejected(f"حجم الملف أكبر من المسموح ({max_bytes // (1024 * 1024)} ميغابايت).")
-    if kind == "certificate" and data.startswith(b"%PDF-"):
+    if kind in _PDF_KINDS and data.startswith(b"%PDF-"):
         return check_pdf(data), "pdf"
     return sanitise_image(data), "jpg"

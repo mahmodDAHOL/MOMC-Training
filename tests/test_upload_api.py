@@ -53,6 +53,25 @@ def test_upload_stores_sanitised_file_and_returns_ocr(monkeypatch):
     assert result == {"kind": "id_front", "uploaded": True, "ocr": ocr}
 
 
+def test_upload_accepts_cv_kind(monkeypatch):
+    prepare_upload(monkeypatch)
+    doc = SimpleNamespace(name="APPLICANT-1")
+    sanitise = Mock(return_value=(b"clean PDF", "pdf"))
+    replace_file = Mock()
+    run_ocr = Mock()
+    monkeypatch.setattr(files, "sanitise", sanitise)
+    monkeypatch.setattr(files, "_editable", Mock(return_value=doc))
+    monkeypatch.setattr(files, "_replace_file", replace_file)
+    monkeypatch.setattr(files, "_run_ocr", run_ocr)
+
+    result = endpoint()(kind="cv")
+
+    sanitise.assert_called_once_with(b"original", "cv", 2 * 1024 * 1024)
+    replace_file.assert_called_once_with(doc, "cv", b"clean PDF", "pdf")
+    run_ocr.assert_not_called()
+    assert result == {"kind": "cv", "uploaded": True}
+
+
 def test_upload_rejects_unknown_kind_before_reading_file(monkeypatch):
     stream = prepare_upload(monkeypatch)
 

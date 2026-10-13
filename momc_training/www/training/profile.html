@@ -3,7 +3,7 @@
 {% macro text(name, label, hint="", type="text", dir="", attrs="") -%}
 <div class="field">
 	<label for="f-{{ name }}">{{ label }}</label>
-	<input class="input" id="f-{{ name }}" name="{{ name }}" type="{{ type }}" {% if dir %}dir="{{ dir }}"{% endif %} value="{{ v[name] | e }}" {{ attrs }}>
+	<input class="input" id="f-{{ name }}" name="{{ name }}" type="{{ type }}" {% if dir %}dir="{{ dir }}"{% endif %} value="{{ v.get(name, '') | e }}" {{ attrs }}>
 	<div class="ocr-note">قرأه النظام من الهوية — تأكد منه.</div>
 	{% if hint %}<div class="hint">{{ hint }}</div>{% endif %}
 </div>
@@ -17,8 +17,9 @@
 		<li><button type="button" data-step="1" aria-current="step"><span class="dot">1</span>الهوية</button></li>
 		<li><button type="button" data-step="2"><span class="dot">2</span>البيانات الشخصية</button></li>
 		<li><button type="button" data-step="3"><span class="dot">3</span>المؤهل والمسار</button></li>
-		<li><button type="button" data-step="4"><span class="dot">4</span>الصورة والشهادة</button></li>
-		<li><button type="button" data-step="5"><span class="dot">5</span>المراجعة والإرسال</button></li>
+		<li><button type="button" data-step="4"><span class="dot">4</span>الجاهزية والدافع</button></li>
+		<li><button type="button" data-step="5"><span class="dot">5</span>المرفقات</button></li>
+		<li><button type="button" data-step="6"><span class="dot">6</span>المراجعة والإرسال</button></li>
 	</ol>
 
 	<form class="panel" data-form="profile" novalidate>
@@ -29,20 +30,20 @@
 			<h2>صوّر هويتك</h2>
 			<p class="muted">صوّر كل وجه على سطح داكن وبإضاءة جيدة، بحيث تملأ البطاقة الإطار. سيقرأ النظام بياناتك ويملأ الخطوة التالية.</p>
 			<div class="cards-pair">
-				<label class="dropzone {% if files.id_front %}has-file{% endif %}" data-upload="id_front">
+				<label class="dropzone {% if files.get('id_front', false) %}has-file{% endif %}" data-upload="id_front">
 					<input type="file" accept="image/*" capture="environment" aria-label="الوجه الأمامي للهوية">
-					{% if files.id_front %}<img class="preview" src="/api/method/momc_training.api.files.view?kind=id_front" alt="">{% endif %}
+					{% if files.get('id_front', false) %}<img class="preview" src="/api/method/momc_training.api.files.view?kind=id_front" alt="">{% endif %}
 					<span class="dz-label"><strong>الوجه الأمامي</strong><span>الوجه الذي يحمل الصورة</span></span>
-					<span class="dz-state">{% if files.id_front %}تم الرفع — اضغط للاستبدال{% endif %}</span>
+					<span class="dz-state">{% if files.get('id_front', false) %}تم الرفع — اضغط للاستبدال{% endif %}</span>
 				</label>
-				<label class="dropzone {% if files.id_back %}has-file{% endif %}" data-upload="id_back">
+				<label class="dropzone {% if files.get('id_back', false) %}has-file{% endif %}" data-upload="id_back">
 					<input type="file" accept="image/*" capture="environment" aria-label="الوجه الخلفي للهوية">
-					{% if files.id_back %}<img class="preview" src="/api/method/momc_training.api.files.view?kind=id_back" alt="">{% endif %}
+					{% if files.get('id_back', false) %}<img class="preview" src="/api/method/momc_training.api.files.view?kind=id_back" alt="">{% endif %}
 					<span class="dz-label"><strong>الوجه الخلفي</strong><span>الأمانة والقيد والعنوان</span></span>
-					<span class="dz-state">{% if files.id_back %}تم الرفع — اضغط للاستبدال{% endif %}</span>
+					<span class="dz-state">{% if files.get('id_back', false) %}تم الرفع — اضغط للاستبدال{% endif %}</span>
 				</label>
 			</div>
-			<div class="actions"><button class="btn btn-primary" type="button" data-next>التالي: مراجعة البيانات</button></div>
+			<div class="actions"><button class="btn btn-primary" type="button" data-next>التالي: البيانات الشخصية</button></div>
 		</section>
 
 		<section class="step-pane" data-pane="2">
@@ -54,12 +55,13 @@
 				{{ text("last_name", "النسبة") }}
 				{{ text("mother_name", "اسم ونسبة الأم") }}
 				{{ text("national_id", "الرقم الوطني", "11 رقماً كما في الهوية", dir="ltr", attrs='inputmode="numeric" maxlength="11"') }}
+				{{ text("applicant_age", "العمر", type="number", dir="ltr", attrs='min="1" max="120" step="1" required') }}
 				<div class="field">
 					<label for="f-gender">الجنس</label>
 					<select class="input" id="f-gender" name="gender">
 						<option value=""></option>
-						<option value="Male" {% if v.gender == "Male" %}selected{% endif %}>ذكر</option>
-						<option value="Female" {% if v.gender == "Female" %}selected{% endif %}>أنثى</option>
+						<option value="Male" {% if v.get("gender", "") == "Male" %}selected{% endif %}>ذكر</option>
+						<option value="Female" {% if v.get("gender", "") == "Female" %}selected{% endif %}>أنثى</option>
 					</select>
 					<div class="ocr-note">قرأه النظام من الهوية — تأكد منه.</div>
 				</div>
@@ -67,11 +69,12 @@
 				{{ text("birth_date", "تاريخ الولادة", type="date", dir="ltr") }}
 				{{ text("governorate", "الأمانة") }}
 				{{ text("registry", "القيد") }}
+				{{ text("residence_city", "مدينة الإقامة الحالية", attrs="required") }}
 				{{ text("phone", "رقم الهاتف", "مثال: 0944123456", type="tel", dir="ltr", attrs='autocomplete="tel"') }}
 			</div>
 			<div class="field">
 				<label for="f-address">العنوان الحالي</label>
-				<textarea class="input" id="f-address" name="address" rows="2">{{ v.address | e }}</textarea>
+				<textarea class="input" id="f-address" name="address" rows="2">{{ v.get("address", "") | e }}</textarea>
 			</div>
 			<div class="actions">
 				<button class="btn btn-primary" type="button" data-next>حفظ ومتابعة</button>
@@ -85,18 +88,52 @@
 				{{ text("university", "الجامعة") }}
 				{{ text("faculty", "الكلية") }}
 				{{ text("major", "الاختصاص") }}
+				<div class="field">
+					<label for="f-study_field">مجال الدراسة <span aria-hidden="true">*</span></label>
+					<select class="input" id="f-study_field" name="study_field" data-exam-study-field="{{ exam_study_field | e }}" required>
+						<option value=""></option>
+						{% for value in ["كلية الإعلام", "قسم الأدب الإنجليزي", "قسم الأدب العربي", "قسم الأدب الفرنسي", "قسم الجغرافية", "قسم علم الاجتماع", "كلية الحقوق", "كلية الهندسة المعلوماتية", "اقتصاد وعلوم إدارية", "خيارات أخرى"] %}
+						<option value="{{ value }}" {% if v.get("study_field", "") == value %}selected{% endif %}>{{ value }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				{{ text("study_field_other", "اسم مجال الدراسة إذا اخترت خيارات أخرى") }}
+				<div class="field">
+					<label for="f-education_status">الحالة التعليمية <span aria-hidden="true">*</span></label>
+					<select class="input" id="f-education_status" name="education_status" required>
+						<option value=""></option>
+						{% for value in ["بكالوريوس سنة 4", "بكالوريوس سنة 5", "خريج جامعي", "دراسات عليا", "خريج دراسات عليا"] %}
+						<option value="{{ value }}" {% if v.get("education_status", "") == value %}selected{% endif %}>{{ value }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				{{ text("graduate_specialty", "تخصص الدراسات العليا (إن وجد)") }}
 				{{ text("graduation_year", "سنة التخرج", type="number", dir="ltr", attrs='min="1980" max="' ~ (current_year + 1) ~ '"') }}
 				{{ text("gpa", "المعدل", "من 100", type="number", dir="ltr", attrs='step="0.01" min="0" max="100"') }}
+				<div class="field">
+					<label for="f-english_level">مستوى اللغة الإنجليزية <span aria-hidden="true">*</span></label>
+					<select class="input" id="f-english_level" name="english_level" required>
+						<option value=""></option>
+						{% for value in ["مبتدئ", "متوسط", "جيد", "ممتاز"] %}
+						<option value="{{ value }}" {% if v.get("english_level", "") == value %}selected{% endif %}>{{ value }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div class="field">
+					<label for="f-other_languages">لغات أخرى ومستواها</label>
+					<textarea class="input" id="f-other_languages" name="other_languages" rows="2">{{ v.get("other_languages", "") | e }}</textarea>
+				</div>
 			</div>
-			<fieldset class="field" style="border:0;padding:0;margin:0 0 18px">
+			<fieldset class="field" data-track-preference style="border:0;padding:0;margin:0 0 18px" {% if v.get("study_field", "") != exam_study_field %}hidden{% endif %}>
 				<legend style="font-weight:600;margin-bottom:8px">المسار الذي ترغب به</legend>
 				<div class="options">
 					{% for value, label in track_ar.items() %}
-					<label class="option"><input type="radio" name="track_preference" value="{{ value }}" {% if v.track_preference == value %}checked{% endif %}> {{ label }}</label>
+					<label class="option"><input type="radio" name="track_preference" value="{{ value }}" {% if v.get("track_preference", "") == value %}checked{% endif %}> {{ label }}</label>
 					{% endfor %}
 				</div>
 				<div class="hint">نحاول قبولك في مسارك المرغوب إن كانت علامتك في قسمه من الامتحان كافية.</div>
 			</fieldset>
+			<p class="hint" data-no-exam-note {% if not v.get("study_field") or v.get("study_field") == exam_study_field %}hidden{% endif %}>سيتم استلام معلوماتك دون الحاجة إلى امتحان القبول.</p>
 			<div class="actions">
 				<button class="btn btn-primary" type="button" data-next>حفظ ومتابعة</button>
 				<button class="btn btn-ghost" type="button" data-prev>السابق</button>
@@ -104,23 +141,121 @@
 		</section>
 
 		<section class="step-pane" data-pane="4">
-			<h2>الصورة الشخصية والشهادة</h2>
+			<h2>العمل والتفرغ والدافع</h2>
+			<div class="grid-2">
+				<div class="field">
+					<label for="f-current_employment">هل أنت ملتزم بعمل حالياً؟ <span aria-hidden="true">*</span></label>
+					<select class="input" id="f-current_employment" name="current_employment" required>
+						<option value=""></option>
+						{% for value in ["نعم", "لا"] %}
+						<option value="{{ value }}" {% if v.get("current_employment", "") == value %}selected{% endif %}>{{ value }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				{{ text("current_job", "ما هو عملك الحالي؟") }}
+				<div class="field">
+					<label for="f-full_time_available">هل أنت متفرغ وقادر على الالتزام بدوام كامل؟ <span aria-hidden="true">*</span></label>
+					<select class="input" id="f-full_time_available" name="full_time_available" required>
+						<option value=""></option>
+						{% for value in ["نعم", "لا"] %}
+						<option value="{{ value }}" {% if v.get("full_time_available", "") == value %}selected{% endif %}>{{ value }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div class="field">
+					<label for="f-part_time_available">إن تعذر الدوام الكامل، هل تستطيع الالتزام بدوام جزئي؟</label>
+					<select class="input" id="f-part_time_available" name="part_time_available">
+						<option value=""></option>
+						{% for value in ["نعم", "لا"] %}
+						<option value="{{ value }}" {% if v.get("part_time_available", "") == value %}selected{% endif %}>{{ value }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div class="field">
+					<label for="f-has_laptop">هل لديك حاسوب محمول متاح للتدريب؟ <span aria-hidden="true">*</span></label>
+					<select class="input" id="f-has_laptop" name="has_laptop" required>
+						<option value=""></option>
+						{% for value in ["نعم", "لا"] %}
+						<option value="{{ value }}" {% if v.get("has_laptop", "") == value %}selected{% endif %}>{{ value }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div class="field">
+					<label for="f-ministry_interest">هل ترى نفسك تعمل في الوزارة؟ <span aria-hidden="true">*</span></label>
+					<select class="input" id="f-ministry_interest" name="ministry_interest" required>
+						<option value=""></option>
+						{% for value in ["نعم", "لا", "ربما"] %}
+						<option value="{{ value }}" {% if v.get("ministry_interest", "") == value %}selected{% endif %}>{{ value }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div class="field">
+					<label for="f-war_affected">هل أنت من مصابي الحرب أو من أبناء شهداء الثورة؟ <span aria-hidden="true">*</span></label>
+					<select class="input" id="f-war_affected" name="war_affected" required>
+						<option value=""></option>
+						{% for value in ["نعم", "لا"] %}
+						<option value="{{ value }}" {% if v.get("war_affected", "") == value %}selected{% endif %}>{{ value }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				{{ text("war_affected_details", "تفاصيل الإصابة أو اسم الشهيد (إن وجد)") }}
+			</div>
+			<div class="field">
+				<label for="f-motivation">ما الذي يحفزك للعمل في الوزارة وما الذي ستضيفه؟ <span aria-hidden="true">*</span></label>
+				<textarea class="input" id="f-motivation" name="motivation" rows="5" maxlength="3000" required>{{ v.get("motivation", "") | e }}</textarea>
+				<div class="hint">أجب بإيجاز، في حدود 10 أسطر.</div>
+			</div>
+			{{ text("referral_name", "اسم الشخص الذي أوصى لك بالتدريب", attrs="required") }}
+			<div class="actions">
+				<button class="btn btn-primary" type="button" data-next>حفظ ومتابعة</button>
+				<button class="btn btn-ghost" type="button" data-prev>السابق</button>
+			</div>
+		</section>
+
+		<section class="step-pane" data-pane="5">
+			<h2>الصور والشهادات والسيرة الذاتية</h2>
 			<div class="attachments">
 				<div>
 					<h3>صورة شخصية</h3>
-					<label class="dropzone is-portrait {% if files.photo %}has-file{% endif %}" data-upload="photo">
+					<label class="dropzone is-portrait {% if files.get('photo', false) %}has-file{% endif %}" data-upload="photo">
 						<input type="file" accept="image/*" aria-label="الصورة الشخصية">
-						{% if files.photo %}<img class="preview" src="/api/method/momc_training.api.files.view?kind=photo" alt="">{% endif %}
+						{% if files.get('photo', false) %}<img class="preview" src="/api/method/momc_training.api.files.view?kind=photo" alt="">{% endif %}
 						<span class="dz-label"><strong>صورة حديثة</strong><span>خلفية فاتحة، الوجه واضح</span></span>
-						<span class="dz-state">{% if files.photo %}تم الرفع — اضغط للاستبدال{% endif %}</span>
+						<span class="dz-state">{% if files.get('photo', false) %}تم الرفع — اضغط للاستبدال{% endif %}</span>
 					</label>
 				</div>
 				<div>
 					<h3>الشهادة الجامعية</h3>
-					<label class="dropzone is-doc {% if files.certificate %}has-file{% endif %}" data-upload="certificate">
+					<label class="dropzone is-doc {% if files.get('certificate', false) %}has-file{% endif %}" data-upload="certificate">
 						<input type="file" accept="image/*,application/pdf" aria-label="الشهادة الجامعية">
 						<span class="dz-label"><strong>صورة أو PDF</strong><span>الشهادة أو وثيقة التخرج</span></span>
-						<span class="dz-state">{% if files.certificate %}تم الرفع — اضغط للاستبدال{% endif %}</span>
+						<span class="dz-state">{% if files.get('certificate', false) %}تم الرفع — اضغط للاستبدال{% endif %}</span>
+					</label>
+				</div>
+				<div>
+					<h3>السيرة الذاتية</h3>
+					<label class="dropzone is-doc {% if files.get('cv', false) %}has-file{% endif %}" data-upload="cv">
+						<input type="file" accept="image/*,application/pdf" aria-label="السيرة الذاتية">
+						<span class="dz-label"><strong>PDF أو صورة</strong><span>السيرة الذاتية — مطلوب</span></span>
+						<span class="dz-state">{% if files.get('cv', false) %}تم الرفع — اضغط للاستبدال{% endif %}</span>
+					</label>
+				</div>
+				<div>
+					<h3>نموذج عمل أو مشروع</h3>
+					<label class="dropzone is-doc {% if files.get('work_sample', false) %}has-file{% endif %}" data-upload="work_sample">
+						<input type="file" accept="image/*,application/pdf" aria-label="نموذج عمل أو مشروع">
+						<span class="dz-label"><strong>اختياري — PDF أو صورة</strong><span>عمل ذو صلة أو مشروع شاركت في تأسيسه</span></span>
+						<span class="dz-state">{% if files.get('work_sample', false) %}تم الرفع — اضغط للاستبدال{% endif %}</span>
+					</label>
+					<label for="f-work_sample_description">أو صف مشروعاً ذا صلة شاركت في تأسيسه</label>
+					<textarea class="input" id="f-work_sample_description" name="work_sample_description" rows="3">{{ v.get("work_sample_description", "") | e }}</textarea>
+				</div>
+				<div>
+					<h3>رسالة التوصية</h3>
+					<label class="dropzone is-doc {% if files.get('recommendation_letter', false) %}has-file{% endif %}" data-upload="recommendation_letter">
+						<input type="file" accept="application/pdf" aria-label="رسالة التوصية">
+						<span class="dz-label"><strong>اختياري — PDF</strong><span>من جهة عمل أو مشرف جامعي</span></span>
+						<span class="dz-state">{% if files.get('recommendation_letter', false) %}تم الرفع — اضغط للاستبدال{% endif %}</span>
 					</label>
 				</div>
 			</div>
@@ -131,9 +266,13 @@
 			</div>
 		</section>
 
-		<section class="step-pane review" data-pane="5">
+		<section class="step-pane review" data-pane="6">
 			<h2>راجع طلبك</h2>
-			<p class="muted">بعد الإرسال لن تتمكن من تعديل البيانات، وتنتقل مباشرة إلى امتحان القبول.</p>
+			{% if v.get("study_field", "") == exam_study_field %}
+			<p class="muted">بعد الإرسال لن تتمكن من تعديل البيانات، وستنتقل مباشرة إلى امتحان القبول الخاص بكلية الهندسة المعلوماتية.</p>
+			{% else %}
+			<p class="muted">بعد الإرسال لن تتمكن من تعديل البيانات. لا يتطلب التقديم في مجال دراستك امتحاناً، وسينتقل طلبك مباشرة إلى المراجعة.</p>
+			{% endif %}
 			<dl data-review></dl>
 			<div class="actions">
 				<button class="btn btn-primary" type="button" data-action="submit-profile">إرسال الطلب</button>
