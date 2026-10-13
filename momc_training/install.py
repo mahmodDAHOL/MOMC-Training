@@ -17,6 +17,7 @@ def after_migrate():
     _ensure_role()
     _ensure_number_cards()
     _ensure_settings()
+    _ensure_exam_domains()
     _seed_questions()
 
 
@@ -49,6 +50,16 @@ def _ensure_settings():
                 settings.set(df.fieldname, df.default)
         settings.flags.ignore_permissions = True
         settings.save()
+
+
+def _ensure_exam_domains():
+    """Create the domain records referenced by the bundled question bank."""
+    sections = {row["section"] for row in _load("exam_questions.json") if row.get("section")}
+    for section in sorted(sections):
+        if not frappe.db.exists("Training Exam Domain", section):
+            frappe.get_doc(
+                {"doctype": "Training Exam Domain", "exam_domain": section}
+            ).insert(ignore_permissions=True)
 
 
 def _seed_questions():
